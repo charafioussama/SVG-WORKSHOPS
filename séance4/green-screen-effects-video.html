@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        canvas,
+        video {
+            border: 1px dashed green;
+        }
+    </style>
+</head>
+
+<body>
+    <video id="v1" controls width="400" height="270">
+        <source src="Big_Buck_Bunny_Trailer.mp4">
+    </video>
+    <video id="v2" controls width="400" height="270">
+        <source src="gs.mp4">
+    </video>
+    <canvas id="c1"></canvas>
+
+    <script>
+
+        const vlib = {
+            FPS: 30,
+            init() {
+                this.canvas = document.querySelector('#c1')
+                this.video = document.querySelector('#v2')
+                this.ctx = this.canvas.getContext('2d')
+                this.w = this.canvas.width = this.video.width
+                this.h = this.canvas.height = this.video.height
+                this.video.addEventListener('play', _ => this.copy())
+
+            },
+            copy() {
+                this.ctx.drawImage(this.video, 0, 0, this.w, this.h)
+                this.process()
+
+
+                if (this.video.ended || this.video.paused)
+                    return
+                setTimeout(_ => this.copy(), 1000 / this.FPS)
+            },
+            process() {
+                const imageData = this.ctx.getImageData(0, 0, this.w, this.h),
+                    data = imageData.data
+                console.log("ok")
+                for (let i = 0; i < data.length; i += 4) {
+                    //console.log("ok")
+                    const r = data[i], g = data[i + 1], b = data[i + 2], a = data[i + 3]
+
+                    if( data[i+2]<=255 && data[i+2]>50 &&  data[i]<=35 && data[i+1]<=35){
+                    data[i] = 0; 
+                    data[i+1] = 177;     
+                    data[i+2] = 64; 
+                    }
+
+                }
+                this.ctx.putImageData(imageData, 0, 0)
+
+            },
+
+        }
+        vlib.init()
+
+        //moteurs de physiques => matter.js, phaser.js=> moteurs de jeux utilise moteur de physique(les sprights)
+
+    </script>
+</body>
+
+</html>

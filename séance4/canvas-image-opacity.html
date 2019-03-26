@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        canvas {
+            border: 5px dashed green;
+            /* filter: hue-rotate(180deg) */
+        }
+        img {
+            /* filter: sepia(0.5) */
+        }
+    </style>
+</head>
+<body>
+    <img src="untels.jpg" width="300" alt="">
+    <canvas></canvas>
+    <div><input type="range"  id="" min="0" onchange="refresh(this.value)"
+         max="360" step="3"></div>
+    <script>
+    const canvas = document.querySelector('canvas'),
+    ctx = canvas.getContext('2d'),
+    img = document.querySelector('img')
+    let value = 0
+    
+    img.onload = () => {
+        draw()
+    }
+
+   
+    function refresh(v) {
+        value = v
+       draw()
+       console.log(value)
+    }
+
+    function draw() {
+        canvas.height = img.height;
+        ctx.filter = 'hue-rotate(' + value + 'deg)'
+        ctx.drawImage(img, 0, 0, img.width, img.height)
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height),
+        data = imageData.data
+        for(let i=0; i<data.length; i+=4) {
+            const r = data[i], g = data[i+1], b = data[i+2], a = data[i+3]
+            // data[i+3] = 67
+            // data[i] = data[i+1] = data[i+2] = (2*r + 8*g + b)/11
+        }
+        ctx.putImageData(imageData, 0, 0)
+    }
+ 
+    
+    </script>
+</body>
+</html>

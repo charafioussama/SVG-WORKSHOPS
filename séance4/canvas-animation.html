@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        canvas {
+            border: 1px dashed gray;
+        }
+    </style>
+</head>
+<body>
+    <canvas></canvas>
+    <script>
+    const canvas = document.querySelector('canvas'),
+    ctx = canvas.getContext('2d')
+    let x = 0, y = 0
+    
+
+    function move() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        ctx.fillRect(x, y, 60,40)
+        setTimeout(move, 100)
+        x += 2
+        y += 2
+    }
+    move()
+
+    
+    </script>
+</body>
+</html>
