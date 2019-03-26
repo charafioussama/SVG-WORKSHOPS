@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+        .sliders {
+            margin: auto;
+            padding: 1em;
+            justify-content: flex-start;
+            align-content: center;
+        }
+
+        input {
+            width: 350px;
+            margin: 5px;
+        }
+
+        .sat {
+            background-image: linear-gradient(to right, #494949 0%, transparent 100%), linear-gradient(to right, #fff 0%, transparent 0%);
+            border-radius: 3px;
+            border-style: solid;
+            border-width: thin;
+
+        }
+
+        .satcolor {
+            background-color: transparent;
+            width: 360px;
+        }
+
+        .light {
+            background-image: linear-gradient(to right, #000 0%, transparent 100%), linear-gradient(to right, #fff 0%, transparent 100%);
+            border-radius: 3px;
+            border-style: solid;
+            border-width: thin;
+            width: 360px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <h2>SVG Color Picker - HSL</h2>
+
+    <div id="square"></div>
+
+
+
+
+    <script type="text/javascript">
+
+        var hue = 0
+        let sat = 100
+        let light = 50
+
+        const svgns = "http://www.w3.org/2000/svg",
+            container = document.querySelector("#square")
+        var svg = document.createElementNS(svgns, "svg");
+
+
+
+        initSVG()
+        function initSVG() {
+            svg.setAttribute("width", "600px");
+            svg.setAttribute("height", "400px");
+        }
+
+
+        createsquareColors()
+        function createsquareColors() {
+
+            let rect = document.createElementNS(svgns, 'rect');
+            rect.setAttributeNS(null, 'x', 5);
+            rect.setAttributeNS(null, 'y', 5);
+            rect.setAttributeNS(null, 'height', 360);
+            rect.setAttributeNS(null, 'width', 360);
+            rect.setAttributeNS(null, 'style', 'fill: none; stroke: blue; stroke-width: 1px;');
+            svg.appendChild(rect);
+            container.appendChild(svg);
+            createInnerSquares()
+            //colorizeSquares()
+        }
+
+
+
+        function createInnerSquares() {
+
+            var k = 0
+            for (var i = 0; i < 360; i += 40) {
+                for (var j = 0; j < 360; j += 40, k += 4) {
+
+
+                    let rect = document.createElementNS(svgns, 'rect');
+                    rect.setAttributeNS(null, 'x', i + 5);
+                    rect.setAttributeNS(null, 'y', j + 5);
+                    rect.setAttributeNS(null, 'height', 40);
+                    rect.setAttributeNS(null, 'width', 40);
+                    rect.setAttributeNS(null, 'style', 'stroke:black;stroke-width: 1px;');
+                    rect.setAttributeNS(null, "fill", 'hsl(' + k + ', ' + sat + '%,' + light + '%)');
+                    rect.setAttribute("onclick", 'colorSection("' + k + '")');
+                    svg.append(rect);
+                }
+            }
+
+        }
+
+
+        createSaturationRange()
+
+        function createSaturationRange() {
+
+            let divsatpere = document.createElement('div');
+            divsatpere.setAttribute("class", "satcolor");
+
+            let divsat = document.createElement('div');
+            divsat.setAttribute("class", "sat");
+
+            let slider = document.createElement('input');
+            slider.name = "sat";
+            slider.type = 'range';
+            slider.min = 1;
+            slider.max = 100;
+            slider.value = 100;
+
+            slider.addEventListener('input', () => {
+                sat = slider.value
+                satChange()
+            })
+
+            divsat.appendChild(slider);
+            divsatpere.appendChild(divsat);
+            divsatpere.setAttribute("style" , "margin-bottom:10px;");
+
+            document.body.appendChild(divsatpere);
+
+            console.log(divsatpere)
+
+        }
+
+        createLightRange()
+        function createLightRange() {
+
+            let divlight = document.createElement('div');
+            divlight.setAttribute("class", "light");
+
+            let slider = document.createElement('input');
+            slider.name = "light";
+            slider.type = 'range';
+            slider.min = 1;
+            slider.max = 100;
+            slider.value = 55;
+
+
+            slider.addEventListener('input', () => {
+                light = slider.value
+                lightChange()
+            })
+
+            divlight.appendChild(slider);
+            document.body.appendChild(divlight);
+
+            console.log(divlight)
+
+        }
+
+
+
+        createSquareResult()
+
+        function createSquareResult() {
+
+            let rectRes = document.createElementNS(svgns, 'rect')
+            rectRes.setAttributeNS(null, 'x', 500)
+            rectRes.setAttributeNS(null, 'y', 5)
+            rectRes.setAttributeNS(null, 'height', 360)
+            rectRes.setAttributeNS(null, 'width', 90)
+
+
+            rectRes.setAttributeNS(null, "fill", "none")
+            rectRes.setAttributeNS(null, "stroke", "black")
+            rectRes.setAttributeNS(null, "stroke-width", "1px")
+
+            rectRes.setAttribute('id', "res")
+            svg.appendChild(rectRes)
+
+        }
+
+
+
+        function colorSection(k) {
+
+
+            hue = k
+
+            color = "hsl(" + hue + ", " + sat + "%," + light + "%)"
+
+            console.log("hue=" + hue)
+
+            console.log("hufunce=" + color)
+            var sq = document.querySelector("#res");
+            sq.setAttributeNS(null, "fill", color);
+            document.querySelector('.satcolor').style.backgroundColor = color
+
+        }
+
+        function satChange() {
+            color = "hsl(" + hue + ", " + sat + "%," + light + "%)"
+
+            console.log("hueChange=" + hue)
+
+            let sq = document.querySelector("#res");
+            sq.setAttributeNS(null, "fill", color);
+        }
+
+        function lightChange() {
+            color = "hsl(" + hue + ", " + sat + "%," + light + "%)"
+
+
+            let sq = document.querySelector("#res");
+            sq.setAttributeNS(null, "fill", color);
+        }
+
+
+
+    </script>
+
+
+</body>
+
+</html>

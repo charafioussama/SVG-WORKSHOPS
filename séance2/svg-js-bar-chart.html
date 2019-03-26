@@ -1,0 +1,45 @@
+<html>
+
+<head>
+  <title>BARCHART - VANILLA JS - SVG</title>
+</head>
+
+<body>
+
+
+  <script type="text/javascript">
+
+
+    var dataset = [80, 100, 56, 72, 85];
+
+
+
+
+    var svgWidth = 500, svgHeight = 300, barPadding = 5;
+    var barWidth = (svgWidth / dataset.length);
+
+
+    const svgns="http://www.w3.org/2000/svg",
+    svg = document.createElementNS(svgns, "svg")
+
+    svg.setAttribute("width", svgWidth);
+    svg.setAttribute("height", svgHeight);
+
+
+    for (var i = 0; i < dataset.length; i++) {
+      var rect = document.createElementNS(svgns, 'rect');
+      rect.setAttribute("y", svgHeight - dataset[i])
+      rect.setAttribute("height", dataset[i])
+      rect.setAttribute("width", barWidth - barPadding)
+      var translate = [barWidth * i, 0]
+      rect.setAttribute("transform", "translate(" + translate + ")")
+      rect.setAttribute("fill","#2"+i+"1")
+      svg.appendChild(rect)
+      document.body.appendChild(svg)
+    }
+
+
+  </script>
+</body>
+
+</html>
