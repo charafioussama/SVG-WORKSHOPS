@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ping-Pong</title>
+    <style>
+        canvas {
+            border: 4px groove gray;
+            background: black;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas width="600" height="600" style="position:absolute; top:20px; left:350px;"></canvas>
+    <script>
+
+        const canvas = document.querySelector('canvas'),
+            ctx = canvas.getContext('2d'),
+
+            state = {
+                left: false,
+                right: false,
+                up: false,
+                down: false,
+            }
+
+        let x = 250, y = 540, cw = canvas.width,
+            ch = canvas.height,
+            fps = 200,
+            bX = 300,
+            bY = 20,
+            mX = 1.5,
+            mY = 3,
+            interval = 1000 / fps,
+            lastTime = (new Date()).getTime(),
+            currentTime = 0,
+            delta = 0,
+            score = 0,
+            lives = 3,
+            chars = '0123456789ABCDEF'.split('')
+
+        var randomColor = function () {
+            var color = '#'
+            for (var i = 0; i < 6; i++)
+                color += chars[Math.floor(Math.random() * 16)]
+            return color
+        }
+
+
+
+        drawRracquet()
+        function drawRracquet() {
+            if (state.left && x > 0) {
+                x -= 10
+            }
+            if (state.right && x < cw - 100) x += 10
+            if (state.up && y > 0) y -= 10
+            if (state.down && y < ch - 40) y += 10
+            ctx.clearRect(0, 0, cw, ch)
+            ctx.beginPath()
+            ctx.rect(x, y, 100, 15)
+            ctx.fill()
+            ctx.closePath()
+        }
+
+        createBall()
+        function createBall() {
+
+            currentTime = (new Date()).getTime()
+            delta = (currentTime - lastTime)
+
+            if (delta > interval) {
+
+
+                ctx.beginPath()
+                ctx.arc(bX, bY, 15, 0, Math.PI * 360)
+                ctx.fill()
+                ctx.closePath()
+
+                if (bX >= cw - 12 || bX <= 10) {
+                    mX *= -1
+                }
+
+                if (bY >= ch) {
+                    bX = 300
+                    bY = 20
+                    lives--
+                    if (!lives) {
+                        alert("GAME OVER")
+                        document.location.reload()
+                    }
+                }
+
+                if (bY <= 9) {
+                    mY *= -1
+                }
+
+                else if (bY >= y - 5 && bY < y + 15 && bX <= x + 100 && bX >= x) {
+                    bY = y - 5
+                    mY *= -1
+                    score++
+                }
+
+                bX += mX
+                bY += mY
+
+                lastTime = currentTime - (delta % interval)
+            }
+        }
+
+        function drawScore() {
+            ctx.font = "16px Impact"
+            ctx.fillStyle = "#0095DD"
+            ctx.fillText("Score : " + score, 8, 20)
+        }
+
+        function loop() {
+            ctx.clearRect(0, 0, cw, ch)
+            ctx.fillStyle = randomColor()
+            drawRracquet()
+            createBall()
+            drawScore()
+            requestAnimationFrame(loop)
+        }
+        loop()
+
+
+
+        document.addEventListener('keydown', (evt) => {
+            // console.log(evt)
+            if (evt.key == 'ArrowRight') {
+                state.right = true
+            }
+            if (evt.key == 'ArrowLeft') {
+                state.left = true
+            }
+        })
+        document.addEventListener('keyup', (evt) => {
+            // console.log(evt)
+            if (evt.key == 'ArrowRight') {
+                state.right = false
+            }
+            if (evt.key == 'ArrowLeft') {
+                state.left = false
+            }
+        })
+
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        canvas {
+            border: 1px dashed gray;
+            /* background: #000; */
+        }
+    </style>
+</head>
+
+<body>
+    <canvas width="400" height="400"></canvas>
+    <script>
+        const canvas = document.querySelector('canvas'),
+            ctx = canvas.getContext('2d'),
+            r = 5
+
+        let x = 200, y = 200,
+            vx = 2, vy = 0,
+            circles = new Array(100)
+        ctx.fillStyle = '#000000'
+
+        function setup() {
+            circles = circles.fill(0)
+                .map(_ => ({
+                    x: Math.random() * (canvas.width - 2 * r) + r,
+                    y: Math.random() * (canvas.height - 2 * r) + r,
+                    vx: Math.random() * 5 - 2.5,
+                    vy: Math.random() * 5 - 2.5,
+                }))
+        }
+        setup()
+
+        function update() {
+            ctx.save()
+            ctx.fillStyle = '#FFFFFF35'
+            ctx.fillRect(0, 0, canvas.width, canvas.height)
+            ctx.restore()
+            drawCircles()
+
+        }
+
+        function drawCircles() {
+            circles.forEach(c => {
+                c.vx = (c.x - r < 0 || c.x + r > canvas.width ) ? c.vx = -c.vx : c.vx
+                c.vy = (c.y - r < 0 || c.y + r > canvas.height) ? c.vy = -c.vy : c.vy
+                console.log("x="+c.x+",y="+c.y)
+                console.log("vx="+c.vx+",vy="+c.vy)
+                ctx.beginPath()
+                ctx.arc(c.x, c.y, r, 0, 2 * Math.PI)
+                ctx.fill()
+                c.x -= c.vx 
+                c.y -= c.vy
+                c.vy -= 0.1
+                ctx.closePath()
+            })
+        }
+        function loop() {
+            update()
+            requestAnimationFrame(loop)
+        }
+
+        loop()
+
+    </script>
+</body>
+
+</html>
