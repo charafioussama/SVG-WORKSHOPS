@@ -15,29 +15,91 @@
 
 
 
-    var svgWidth = 500, svgHeight = 300, barPadding = 5;
+    var svgWidth = 600, svgHeight = 300, barPadding = 5;
     var barWidth = (svgWidth / dataset.length);
 
 
-    const svgns="http://www.w3.org/2000/svg",
-    svg = document.createElementNS(svgns, "svg")
+    const svgns = "http://www.w3.org/2000/svg",
+      svg = document.createElementNS(svgns, "svg")
 
     svg.setAttribute("width", svgWidth);
     svg.setAttribute("height", svgHeight);
 
 
-    for (var i = 0; i < dataset.length; i++) {
-      var rect = document.createElementNS(svgns, 'rect');
-      rect.setAttribute("y", svgHeight - dataset[i])
-      rect.setAttribute("height", dataset[i])
-      rect.setAttribute("width", barWidth - barPadding)
-      var translate = [barWidth * i, 0]
-      rect.setAttribute("transform", "translate(" + translate + ")")
-      rect.setAttribute("fill","#2"+i+"1")
-      svg.appendChild(rect)
-      document.body.appendChild(svg)
+    createBars()
+
+    function createBars() {
+
+      for (var i = 0; i < dataset.length; i++) {
+        var rect = document.createElementNS(svgns, 'rect');
+        rect.setAttribute("y", svgHeight - dataset[i])
+        rect.setAttribute("height", dataset[i])
+        rect.setAttribute("width", barWidth - barPadding)
+        var translate = [barWidth * i, 0]
+
+        rect.setAttribute("transform", "translate(" + translate + ")")
+
+
+        var animate = document.createElementNS(svgns, 'animate');
+        animate.setAttribute("attributeName", "height")
+        animate.setAttribute("from", 0)
+        animate.setAttribute("to", dataset[i])
+        animate.setAttribute("dur", "0.5s")
+        animate.setAttribute("fill", "freeze")
+
+        rect.appendChild(animate)
+
+        rect.setAttribute("fill", "#2" + i + "1")
+        svg.appendChild(rect)
+        document.body.appendChild(svg)
+      }
+
     }
 
+    createAxes()
+
+    function createAxes() {
+
+      xAxe = document.createElementNS(svgns, "path");
+      xAxe.setAttributeNS(null, "d", "M2 20 V 450");
+      xAxe.setAttributeNS(null, "stroke", "black");
+      xAxe.setAttributeNS(null, "stroke-width", 5);
+      yAxe = document.createElementNS(svgns, "path");
+      yAxe.setAttributeNS(null, "d", "M2 300 H 600");
+      yAxe.setAttributeNS(null, "stroke", "black");
+      yAxe.setAttributeNS(null, "stroke-width", 5);
+
+
+
+      //createText(10, 200, "0")
+      //createText(5, 155, "25%");
+      //createText(5, 110, "50%");
+      //createText(5, 65, "75%");
+      //createText(0, 20, "100%");
+
+      //createText(50, 320, "2010");
+      //createText(130, 230, "2011");
+      //createText(190, 230, "2012");
+      //createText(250, 230, "2013");
+      //createText(310, 230, "2014");
+
+
+      svg.appendChild(xAxe);
+      svg.appendChild(yAxe);
+
+    }
+
+
+    function createText(x, y, value) {
+      var newText = document.createElementNS(svgns, "text");
+      newText.setAttributeNS(null, "x", x);
+      newText.setAttributeNS(null, "y", y);
+      newText.setAttributeNS(null, "font-size", "15");
+
+      var textNode = document.createTextNode(value);
+      newText.appendChild(textNode);
+      svg.appendChild(newText)
+    }
 
   </script>
 </body>
