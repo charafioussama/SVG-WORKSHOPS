@@ -6,17 +6,14 @@
 
 <body>
 
-
   <script type="text/javascript">
 
 
     var dataset = [80, 100, 56, 72, 85];
 
 
-
-
-    var svgWidth = 600, svgHeight = 300, barPadding = 5;
-    var barWidth = (svgWidth / dataset.length);
+    var svgWidth = 800, svgHeight = 300, barPadding = 5;
+    var barWidth = (svgWidth / (dataset.length+1));
 
 
     const svgns = "http://www.w3.org/2000/svg",
@@ -32,7 +29,8 @@
 
       for (var i = 0; i < dataset.length; i++) {
         var rect = document.createElementNS(svgns, 'rect');
-        rect.setAttribute("y", svgHeight - dataset[i])
+        rect.setAttribute("y", svgHeight - dataset[i]- 30)
+        rect.setAttribute("x", 100)
         rect.setAttribute("height", dataset[i])
         rect.setAttribute("width", barWidth - barPadding)
         var translate = [barWidth * i, 0]
@@ -61,34 +59,32 @@
     function createAxes() {
 
       xAxe = document.createElementNS(svgns, "path");
-      xAxe.setAttributeNS(null, "d", "M2 20 V 450");
+      xAxe.setAttributeNS(null, "d", "M100 20 V 270");
       xAxe.setAttributeNS(null, "stroke", "black");
       xAxe.setAttributeNS(null, "stroke-width", 5);
       yAxe = document.createElementNS(svgns, "path");
-      yAxe.setAttributeNS(null, "d", "M2 300 H 600");
+      yAxe.setAttributeNS(null, "d", "M100 270 H 770");
       yAxe.setAttributeNS(null, "stroke", "black");
       yAxe.setAttributeNS(null, "stroke-width", 5);
 
 
 
-      //createText(10, 200, "0")
-      //createText(5, 155, "25%");
-      //createText(5, 110, "50%");
-      //createText(5, 65, "75%");
-      //createText(0, 20, "100%");
+      createText(70, 275, "0%")
+      createText(65, 230, "25%");
+      createText(65, 185, "50%");
+      createText(65, 140, "75%");
+      createText(60, 95, "100%");
 
-      //createText(50, 320, "2010");
-      //createText(130, 230, "2011");
-      //createText(190, 230, "2012");
-      //createText(250, 230, "2013");
-      //createText(310, 230, "2014");
+      createText(140, 290, "2010");
+      createText(280, 290, "2011");
+      createText(420, 290, "2012");
+      createText(560, 290, "2013");
+      createText(700, 290, "2014");
 
 
       svg.appendChild(xAxe);
       svg.appendChild(yAxe);
-
     }
-
 
     function createText(x, y, value) {
       var newText = document.createElementNS(svgns, "text");
