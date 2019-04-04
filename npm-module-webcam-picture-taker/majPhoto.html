@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Profile</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -15,7 +16,7 @@
     <p></p>
     <div class="row">
         <div class="container">
-            <div class="col-md-8 mx-auto">
+            <div class="col-md-8  col-md-offset-2">
                 <div class="card">
 
                     <div class="row">
@@ -35,15 +36,18 @@
                     <div class="card-body text-center">
                         <h4 class="card-title">John Doe</h4>
                         <p class="card-text text-muted">UI/UX Designer</p>
-                        <p class="mt-4"><a href="#" class="btn btn-primary" id="startCounting()">Capturer</a><span> 1</span></p>
+                        <p class="mt-4"><a href="#" class="btn btn-primary" onclick="startCounting(this)"><i
+                                    class="glyphicon glyphicon-camera"></i> Capturer</a></p><span class="compt"> </span>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-
     <script>
+
+        var captured
 
         const vlib = {
             FPS: 30,
@@ -54,11 +58,7 @@
                 this.w = this.canvas.width = this.video.width
                 this.h = this.canvas.height = this.video.height
                 this.video.addEventListener('play', _ => this.copy())
-
-
                 this.startCamera()
-
-
 
             },
             copy() {
@@ -66,7 +66,19 @@
                 this.process()
                 if (this.video.ended || this.video.paused)
                     return
-                setTimeout(_ => this.copy(), 1000 / this.FPS)
+
+                this.captured = setTimeout(_ => this.copy(), 1000 / this.FPS)
+            },
+            capturer() {
+
+                clearInterval(this.captured)
+                this.ctx.drawImage(this.video, 0, 0, this.w, this.h)
+
+                let base64String = this.canvas.toDataURL();
+                alert(base64String)
+
+                //this.process()
+
             },
             process() {
                 const imageData = this.ctx.getImageData(0, 0, this.w, this.h),
@@ -92,19 +104,43 @@
 
                     videoReplace.src = "Big_Buck_Bunny_Trailer.mp4"
 
+
                 }
             }
         }
         vlib.init()
 
-        function startCounting(params) {
+        function startCounting(link) {
 
+            this.captured = false
+            spanChrono = document.querySelector('.compt')
 
+            var cc = 4;
 
+            link.classList.add('btn-default');
+            link.classList.remove('btn-primary');
+            link.onclick = null;
+
+            var interval = setInterval(function () {
+                spanChrono.innerHTML = '  <i class="glyphicon glyphicon-time"></i>  ' + --cc + ' s';
+
+                if (cc == 0) {
+                    clearInterval(interval);
+
+                    link.classList.add('btn-primary');
+                    link.classList.remove('btn-default');
+                    link.onclick = "startCounting(" + link + ")";
+
+                    link.onclick = function () {
+                        startCounting(link)
+                    }
+                    vlib.capturer()
+                    spanChrono.innerHTML = ""
+                }
+
+            }, 1000);
 
         }
-
-
 
     </script>
 
