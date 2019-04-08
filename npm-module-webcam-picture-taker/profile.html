@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>    
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -18,19 +18,35 @@
     <div class="row ">
         <div class="container">
             <div class="col-md-4 col-md-offset-4">
-                <div class="card"   >
-                    <img class="card-img-top" src="profile.jpg" alt="Profile" width="300" height="250">
+                <div class="card">
+                    <img class="card-img-top" src="" alt="Profile" width="300" height="250" id="profil">
                     <div class="card-body text-center">
                         <h4 class="card-title">John Doe</h4>
                         <p class="card-text text-muted">UI/UX Designer</p>
-                        <p class="mt-4"><a href="majPhoto.html" class="btn btn-primary"><i class="glyphicon glyphicon-camera"></i>   Photo</a></p>
+                        <p class="mt-4"><a href="majPhoto.html" class="btn btn-primary"><i
+                                    class="glyphicon glyphicon-camera"></i> Photo</a></p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <script>
 
+        setImageProfil()
+        function setImageProfil() {
+
+            var dataImage = localStorage.getItem('imgData');
+            profilImg = document.getElementById('profil');
+
+            if (dataImage) {                
+                profilImg.src = "data:image/png;base64," + dataImage;
+            } else {
+                profilImg.src = "profile.jpg"
+            }
+        }
+
+    </script>
 
 </body>
 

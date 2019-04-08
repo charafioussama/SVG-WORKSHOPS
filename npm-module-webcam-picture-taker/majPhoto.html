@@ -32,12 +32,15 @@
                         </div>
 
                     </div>
-
                     <div class="card-body text-center">
                         <h4 class="card-title">John Doe</h4>
                         <p class="card-text text-muted">UI/UX Designer</p>
                         <p class="mt-4"><a href="#" class="btn btn-primary" onclick="startCounting(this)"><i
-                                    class="glyphicon glyphicon-camera"></i> Capturer</a></p><span class="compt"> </span>
+                                    class="glyphicon glyphicon-camera"></i> Capturer</a>
+
+                            <a href="#" class="btn btn-primary" onclick="saveImageProfil()"><i
+                                    class="glyphicon glyphicon-save"></i> Save</a>
+                        </p><span class="compt"> </span>
 
                     </div>
                 </div>
@@ -63,19 +66,15 @@
             },
             copy() {
                 this.ctx.drawImage(this.video, 0, 0, this.w, this.h)
-                this.process()
+                //this.process()
                 if (this.video.ended || this.video.paused)
                     return
-
                 this.captured = setTimeout(_ => this.copy(), 1000 / this.FPS)
             },
             capturer() {
 
                 clearInterval(this.captured)
                 this.ctx.drawImage(this.video, 0, 0, this.w, this.h)
-
-                let base64String = this.canvas.toDataURL();
-                alert(base64String)
 
                 //this.process()
 
@@ -86,7 +85,6 @@
                 for (let i = 0; i < data.length; i += 4) {
                     const r = data[i], g = data[i + 1], b = data[i + 2], a = data[i + 3]
                     //data[i] = data[i + 1] = data[i + 2] = (r + g + b) / 3
-
                 }
                 this.ctx.putImageData(imageData, 0, 0)
 
@@ -100,11 +98,7 @@
                 } catch (error) {
                     console.log("something was wrong")
                     videoReplace = document.querySelector('#v2')
-
-
                     videoReplace.src = "Big_Buck_Bunny_Trailer.mp4"
-
-
                 }
             }
         }
@@ -134,12 +128,17 @@
                     link.onclick = function () {
                         startCounting(link)
                     }
-                    vlib.capturer()
                     spanChrono.innerHTML = ""
+                    vlib.capturer()
                 }
 
             }, 1000);
+        }
 
+        function saveImageProfil() {
+            let imgData = vlib.canvas.toDataURL("image/png");
+            localStorage.setItem("imgData", imgData.replace(/^data:image\/(png|jpg);base64,/, ""));
+            window.location = "profile.html";
         }
 
     </script>
