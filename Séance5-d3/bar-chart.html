@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>BAR CHART - D3.JS</title>
+
+    <style>
+        .graph svg {
+            border: 0.5px dotted gray;
+        }
+
+        .graph rect.marge {
+            stroke: #000;
+            stroke-width: 0.25;
+            stroke-dasharray: 1 2;
+            fill: none
+        }
+    </style>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+</head>
+
+<body>
+    <div class="graph"></div>
+</body>
+<script>
+    let choice = true
+    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+
+    
+    const bourse = [
+        { label: 'AA', valeur: 300 },
+        { label: 'BB', valeur: 340 },
+        { label: 'CC', valeur: 220 },
+        { label: 'DD', valeur: 180 },
+        { label: 'EE', valeur: 230 }
+    ]
+    const margin = { left: 40, right: 10, top: 10, bottom: 30 }
+    const width = 360, height = 360
+    
+    const graph = d3.select('.graph').append('svg')
+    
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .append('g')
+        .attr('transform', `translate(${margin.left}, ${margin.top})`)
+    graph.append('rect')
+        .attr('width', width)
+        .attr('height', height)
+        .attr('class', 'marge')
+    const xScale = d3.scaleBand()
+        .domain(bourse.map(e => e.label))
+        .range([0, width])
+        .padding(0.2)
+    graph.append('g')
+        .attr('transform', `translate(0, ${height})`)
+        .call(d3.axisBottom(xScale))
+    const yScale = d3.scaleLinear()
+        .domain([0, d3.max(bourse, d => d.valeur)])
+        .range([height, 0])
+    graph.append('g')
+        .call(d3.axisLeft(yScale))
+
+    graph.selectAll()
+        .data(bourse)
+        .enter().append('rect')
+        .attr('x', d => xScale(d.label))
+        .attr('y', d => yScale(d.valeur))
+        .attr('height', d => height - yScale(d.valeur))
+        .attr('width', xScale.bandwidth())
+
+        console.log("one")
+
+
+        const svg = d3.select('svg')
+
+
+    const update = () => {
+
+        console.table(bourse);
+
+
+        const circles = graph.selectAll('rect').data(bourse, d => d) 
+
+
+        circles.enter().append('rect') /* enter() */
+        .attr('x', d =>xScale(d.label))
+        .attr('width',  xScale.bandwidth())
+        .attr('y',d => yScale(d.valeur))
+        .attr('height', d => height - yScale(d.valeur))
+    // circles.transition()        /* update */
+    //     .attr('x1', (d, i) => i * 50 + 50)
+    //     .attr('x2', (d, i) => i * 50 + 50)
+    //     .attr('y1', y(0)).attr('y2', (d) => y(d))
+    //     .style('stroke', d => color2(d))
+    // circles.exit().transition()     /* exit() */
+    //     .attr('x1', (d, i) => i * 50  - 60)
+    //     .attr('x2', (d, i) => i * 50 - 60)
+    //     .remove() 
+
+        
+
+    }
+
+    setInterval(() => {
+        if (choice) bourse.push({ label: possible.charAt(Math.floor(Math.random() * possible.length)) + possible.charAt(Math.floor(Math.random() * possible.length)), valeur: Math.random() * 300 + 40 })
+        else bourse.shift()
+        choice = !choice
+        update()
+    }, 500)
+
+
+
+</script>
+
+</html>
