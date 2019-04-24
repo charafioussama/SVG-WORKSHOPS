@@ -13,7 +13,7 @@
         }
 
         .graph rect.marge {
-            stroke: #000;
+            stroke: rgb(163, 118, 118);
             stroke-width: 0.25;
             stroke-dasharray: 1 2;
             fill: none
@@ -30,7 +30,7 @@
     let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 
-    
+
     const bourse = [
         { label: 'AA', valeur: 300 },
         { label: 'BB', valeur: 340 },
@@ -40,22 +40,22 @@
     ]
     const margin = { left: 40, right: 10, top: 10, bottom: 30 }
     const width = 360, height = 360
-    
+
     const graph = d3.select('.graph').append('svg')
-    
+
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom)
         .append('g')
         .attr('transform', `translate(${margin.left}, ${margin.top})`)
-    graph.append('rect')
-        .attr('width', width)
-        .attr('height', height)
-        .attr('class', 'marge')
+    graph.append('path')
+        .attr('d', "M0 0 H 360 V 360 H 0 L 0 0")
+        .attr('fill', 'white')
     const xScale = d3.scaleBand()
         .domain(bourse.map(e => e.label))
         .range([0, width])
         .padding(0.2)
     graph.append('g')
+    .attr("class", "x axis")
         .attr('transform', `translate(0, ${height})`)
         .call(d3.axisBottom(xScale))
     const yScale = d3.scaleLinear()
@@ -67,15 +67,10 @@
     graph.selectAll()
         .data(bourse)
         .enter().append('rect')
-        .attr('x', d => xScale(d.label))
+        .attr('x', (d, i) => xScale(d.label))
         .attr('y', d => yScale(d.valeur))
         .attr('height', d => height - yScale(d.valeur))
         .attr('width', xScale.bandwidth())
-
-        console.log("one")
-
-
-        const svg = d3.select('svg')
 
 
     const update = () => {
@@ -83,34 +78,52 @@
         console.table(bourse);
 
 
-        const circles = graph.selectAll('rect').data(bourse, d => d) 
+        const circles = graph.selectAll('rect').data(bourse, d => d)
+
+        console.log(circles);
+
+        console.table(circles);
+
+        xScale.domain(bourse.map(e => e.label))
+	    yScale.domain([0, d3.max(bourse, d => d.valeur)])
+
+        graph.select('.x')
+        .call(d3.axisBottom(xScale))
 
 
-        circles.enter().append('rect') /* enter() */
-        .attr('x', d =>xScale(d.label))
-        .attr('width',  xScale.bandwidth())
-        .attr('y',d => yScale(d.valeur))
-        .attr('height', d => height - yScale(d.valeur))
-    // circles.transition()        /* update */
-    //     .attr('x1', (d, i) => i * 50 + 50)
-    //     .attr('x2', (d, i) => i * 50 + 50)
-    //     .attr('y1', y(0)).attr('y2', (d) => y(d))
-    //     .style('stroke', d => color2(d))
-    // circles.exit().transition()     /* exit() */
-    //     .attr('x1', (d, i) => i * 50  - 60)
-    //     .attr('x2', (d, i) => i * 50 - 60)
-    //     .remove() 
 
-        
+
+
+        circles.enter().append('rect')
+            .attr('x', width)
+            .attr('width', 0)
+            .attr('y', d => yScale(d.valeur))
+            .attr('height', d => height - yScale(d.valeur))
+
+
+
+        circles.transition()
+            .attr('x', d => xScale(d.label))
+            .attr('width', xScale.bandwidth())
+            .attr('y', (d, i) =>yScale(d.valeur))
+            .attr('height', (d) => height -yScale(d.valeur))
+
+        /*
+        circles.exit().transition()
+            .attr('x', -xScale.bandwidth())
+            .remove()
+*/
+
 
     }
 
     setInterval(() => {
         if (choice) bourse.push({ label: possible.charAt(Math.floor(Math.random() * possible.length)) + possible.charAt(Math.floor(Math.random() * possible.length)), valeur: Math.random() * 300 + 40 })
-        else bourse.shift()
-        choice = !choice
+        else
+        bourse.shift()
+        choice=!choice
         update()
-    }, 500)
+    }, 1000)
 
 
 

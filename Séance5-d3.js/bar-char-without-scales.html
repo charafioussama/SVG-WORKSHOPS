@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>BAR CHART - D3.JS</title>
+
+    <style>
+        svg {
+            border: 0.5px dotted gray;
+        }
+
+        line {
+            stroke: maroon;
+            stroke-width: 40;
+        }
+    </style>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+</head>
+
+<body>
+    <div class="graph">
+    </div>
+</body>
+<script>
+    /*/ Graphique à barres simple /*/
+    let choice = true
+    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+
+    const bourse = [
+        { label: 'AA', valeur: 300 },
+        { label: 'BB', valeur: 340 },
+        { label: 'CC', valeur: 220 },
+        { label: 'DD', valeur: 180 },
+        { label: 'EE', valeur: 230 }
+    ]
+    const margin = { left: 40, right: 10, top: 10, bottom: 30 }
+    const width = 360, height = 360
+
+    const graph = d3.select('.graph').append('svg')
+
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .append('g')
+        .attr('transform', `translate(${margin.left}, ${margin.top})`)
+    graph.append('path')
+        .attr('d', "M0 0 H 360 V 360 H 0 L 0 0")
+        .attr('fill', 'white')
+    const xScale = d3.scaleBand()
+        .domain(bourse.map(e => e.label))
+        .range([0, width])
+        .padding(0.2)
+    graph.append('g')
+    .attr("class", "x axis")
+        .attr('transform', `translate(0, ${height})`)
+        .call(d3.axisBottom(xScale))
+    const yScale = d3.scaleLinear()
+        .domain([0, d3.max(bourse, d => d.valeur)])
+        .range([height, 0])
+    graph.append('g')
+        .call(d3.axisLeft(yScale))
+
+    const update = () => {
+        const circles = graph.selectAll('rect')
+            .data(bourse, d => d)  /* <--- ??! */
+        circles.enter().append('line')      /* enter() */
+            .attr('x', (d, i) => i * 50 + 50)
+            .attr('width', (d, i) => i * 50 + 50)
+            .attr('y', 400).attr('height', 400)
+        circles.transition()                /* update */
+            .attr('x', (d, i) => i * 50 + 50)
+            .attr('width', (d, i) => i * 50 + 50)
+            .attr('y', 400).attr('height', (d) => 400 - d.valeur * 4)
+        circles.exit().transition()         /* exit() */
+            .attr('x', (d, i) => i * 50 - 60)
+            .attr('width', (d, i) => i * 50 - 60)
+            .remove()
+    }
+    setInterval(() => {
+        if (choice) bourse.push({ label: possible.charAt(Math.floor(Math.random() * possible.length)) + possible.charAt(Math.floor(Math.random() * possible.length)), valeur: Math.random() * 300 + 40 })
+        else bourse.shift()
+        choice = !choice
+        update()
+    }, 500)
+
+
+
+
+</script>
+
+</html>
