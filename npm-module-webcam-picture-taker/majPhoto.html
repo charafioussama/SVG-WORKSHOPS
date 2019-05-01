@@ -151,22 +151,9 @@
             },
             process() {
 
-                const imageData = this.ctx.getImageData(0, 0, this.w, this.h)
+               const imageData = this.ctx.getImageData(0, 0, this.w, this.h)
+               applyFilter(this.ctx)
 
-                if (state.contrast == true) {
-                    //contrastImage(imageData, rng1.value)
-                    contrastImage(this.ctx, rng1.value)
-
-                }
-                if (state.hue == true) {
-                    hueImage(this.ctx, rng2.value)
-                }
-                if (state.saturation == true) {
-                    saturationImage(this.ctx, rng3.value)
-                }
-                if (state.lightness == true) {
-                    lightnessImage(this.ctx, rng4.value)
-                }
                 /*
                 for (let i = 0; i < d.length; i += 4) {
 
@@ -262,55 +249,32 @@
 
         }
         */
-        function contrastImage(ctx, contrast) {	//input range [0..360]
-            ctx.filter = 'contrast('+contrast+'%)';
+        function applyFilter(ctx) {
+            ctx.filter = 'contrast('+contr+'%) hue-rotate('+hu+'deg) saturate('+sat+'%) brightness('+ligh+'%)';
             vi.style.filter = ctx.filter;
         }
 
-        function hueImage(ctx, hue) {	//input range [0..360]
-            ctx.filter = 'hue-rotate('+hue+'deg)';
-            vi.style.filter = ctx.filter;
-        }
-        function saturationImage(ctx, sat) {	//input range [100..0]
-            ctx.filter = 'saturate('+sat+'%)';
-            vi.style.filter = ctx.filter;
-
-        }
-        function lightnessImage(ctx, light) {	//input range [0..360]
-            ctx.filter = 'brightness('+light+'%)';
-            vi.style.filter = ctx.filter;
-
-        }
 
 
-        state = {
-            contrast: false,
-            hue: false,
-            saturation: false,
-            lightness: false,
-        }
-        var rng1 = document.querySelector("#contrast");
-        var rng2 = document.querySelector("#hue");
-        var rng3 = document.querySelector("#saturation");
-        var rng4 = document.querySelector("#lightness");
+        var rng1 = document.querySelector("#contrast"),
+        rng2 = document.querySelector("#hue"),
+        rng3 = document.querySelector("#saturation"),
+        rng4 = document.querySelector("#lightness")
+
+        var contr=rng1.value,hu=rng2.value,sat=rng3.value,ligh=rng4.value    
 
 
         rng1.addEventListener('change', (evt) => {
-            console.log(rng1.value)
-            state.contrast = true
+            contr=rng1.value;
         })
-
         rng2.addEventListener('change', (evt) => {
-            console.log(rng2.value)
-            state.hue = true
+            hu=rng2.value;
         })
         rng3.addEventListener('change', (evt) => {
-            console.log(rng3.value)
-            state.saturation = true
+            sat=rng3.value;
         })
         rng4.addEventListener('change', (evt) => {
-            console.log(rng4.value)
-            state.lightness = true
+            ligh=rng4.value;
         })
 /*
         var operations = {
