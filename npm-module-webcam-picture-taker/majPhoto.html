@@ -83,7 +83,7 @@
                     <div class="row">
 
                         <div class="col-md-6">
-                            <video controls id="v2" width="330" height="250" autoplay="true">
+                            <video id="v2" width="330" height="250" autoplay="true">
                                 <source>
                                 </source>
                             </video>
@@ -144,13 +144,14 @@
             capturer() {
 
                 clearInterval(this.captured)
-                this.ctx.drawImage(this.video, 0, 0, this.w, this.h)
+                applyFilter(this.ctx)
 
-                //this.process()
+                this.ctx.drawImage(this.video, 0, 0, this.w, this.h)
+                applyFilterSt(this.video)
 
             },
             process() {
-
+               console.log("hahaha")
                const imageData = this.ctx.getImageData(0, 0, this.w, this.h)
                applyFilter(this.ctx)
 
@@ -254,7 +255,11 @@
             vi.style.filter = ctx.filter;
         }
 
+        function applyFilterSt(vi) {
+            vi.style.filter= 'contrast('+contr+'%) hue-rotate('+hu+'deg) saturate('+sat+'%) brightness('+ligh+'%)';
+            setTimeout(_ => applyFilterSt(vi), 1000 / this.FPS)
 
+        }
 
         var rng1 = document.querySelector("#contrast"),
         rng2 = document.querySelector("#hue"),
