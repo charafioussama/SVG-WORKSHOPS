@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="style.css">
     <style>
         input#contrast,
-        input#hue {
+        input#hue,input#saturation {
             -webkit-appearance: none;
             margin: 8px 0;
             padding: 10px 25px 10px 5px;
@@ -20,11 +20,11 @@
         }
 
         input#contrast:focus,
-        input#hue:focus {
+        input#hue:focus,input#saturation {
             outline: none;
         }
 
-        input#contrast::-webkit-slider-runnable-track {
+        input#contrast::-webkit-slider-runnable-track,input#saturation::-webkit-slider-runnable-track {
             width: 100%;
             height: 12.8px;
             cursor: pointer;
@@ -36,7 +36,7 @@
         }
 
         input#contrast::-webkit-slider-thumb,
-        input#hue::-webkit-slider-thumb {
+        input#hue::-webkit-slider-thumb,input#saturation::-webkit-slider-thumb {
             box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
             border: 0px solid #000000;
             height: 20px;
@@ -48,7 +48,7 @@
             margin-top: -3.6px;
         }
 
-        input#contrast:focus::-webkit-slider-runnable-track {
+        input#contrast:focus::-webkit-slider-runnable-track,input#saturation:focus::-webkit-slider-runnable-track {
             background: palegoldenrod;
         }
 
@@ -88,7 +88,7 @@
                             <div id="edit" style="display: none;padding: 5px;">
                                 <input type="range" id="contrast" min="-100" max="100">
                                 <input type="range" id="hue" min="0" max="360" value="0">
-                                <input type="range" id="hue" min="0" max="360" value="0">
+                                <input type="range" id="saturation" min="0" max="200" value="100">
                                 <input type="range" id="hue" min="0" max="360" value="0">
                             </div>
                         </div>
@@ -156,6 +156,9 @@
                 }
                 if (state.hue == true) {
                     hueImage(this.ctx, rng2.value)
+                }
+                if (state.saturation == true) {
+                    saturationImage(this.ctx, rng3.value)
                 }
 
                 /*
@@ -250,8 +253,9 @@
         function hueImage(ctx, hue) {	//input range [0..360]
             ctx.filter = 'hue-rotate('+hue+'deg)';
         }
-        function saturationImage(ctx, hue) {	//input range [0..360]
-            ctx.filter = 'hue-rotate('+hue+'deg)';
+        function saturationImage(ctx, sat) {	//input range [100..0]
+            ctx.filter = 'saturate('+sat+'%)';
+            console.log(ctx.filter)
         }
         function lightnessImage(ctx, hue) {	//input range [0..360]
             ctx.filter = 'hue-rotate('+hue+'deg)';
@@ -261,9 +265,12 @@
         state = {
             contrast: false,
             hue: false,
+            hue: false,
         }
         var rng1 = document.querySelector("#contrast");
         var rng2 = document.querySelector("#hue");
+        var rng3 = document.querySelector("#saturation");
+
 
         rng1.addEventListener('change', (evt) => {
             console.log(rng1.value)
@@ -273,6 +280,10 @@
         rng2.addEventListener('change', (evt) => {
             console.log(rng2.value)
             state.hue = true
+        })
+        rng3.addEventListener('change', (evt) => {
+            console.log(rng3.value)
+            state.saturation = true
         })
 /*
         var operations = {
