@@ -30,7 +30,7 @@
             cursor: pointer;
             animate: 0.2s;
             box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
-            background: palegoldenrod;
+            background: beige;
             border-radius: 25px;
             border: 0px solid #000101;
         }
@@ -42,7 +42,7 @@
             height: 20px;
             width: 39px;
             border-radius: 7px;
-            background: sienna;
+            background: grey;
             cursor: pointer;
             -webkit-appearance: none;
             margin-top: -3.6px;
@@ -87,9 +87,9 @@
                             </video>
                             <div id="edit" style="display: none;padding: 5px;">
                                 <input type="range" id="contrast" min="-100" max="100">
-                                <input type="range" id="hue" min="0" max="360">
-                                <input type="range">
-                                <input type="range">
+                                <input type="range" id="hue" min="0" max="360" value="0">
+                                <input type="range" id="hue" min="0" max="360" value="0">
+                                <input type="range" id="hue" min="0" max="360" value="0">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -155,7 +155,7 @@
                     contrastImage(imageData, rng1.value)
                 }
                 if (state.hue == true) {
-                    hueImage(imageData, CanvasRenderingContext2D.value)
+                    hueImage(this.ctx, rng2.value)
                 }
 
                 /*
@@ -247,15 +247,14 @@
             return imgData;
         }
 
-        function hueImage(imgData, hue) {	//input range [-100..100]
-            var d = imgData.data;
-
-            for (var i = 0; i < d.length; i += 4) {	//r,g,b,a
-                d[i] = d[i] * contrast + intercept;
-                d[i + 1] = d[i + 1] * contrast + intercept;
-                d[i + 2] = d[i + 2] * contrast + intercept;
-            }
-            return imgData;
+        function hueImage(ctx, hue) {	//input range [0..360]
+            ctx.filter = 'hue-rotate('+hue+'deg)';
+        }
+        function saturationImage(ctx, hue) {	//input range [0..360]
+            ctx.filter = 'hue-rotate('+hue+'deg)';
+        }
+        function lightnessImage(ctx, hue) {	//input range [0..360]
+            ctx.filter = 'hue-rotate('+hue+'deg)';
         }
 
 
@@ -275,7 +274,82 @@
             console.log(rng2.value)
             state.hue = true
         })
+/*
+        var operations = {
 
+            rgbToHsl: function (r, g, b) {
+                r /= 255, g /= 255, b /= 255;
+                var max = Math.max(r, g, b), min = Math.min(r, g, b);
+                var h, s, l = (max + min) / 2;
+                if (max == min) {
+                    h = s = 0; // achromatic
+                } else {
+                    var d = max - min;
+                    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                    switch (max) {
+                        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                        case g: h = (b - r) / d + 2; break;
+                        case b: h = (r - g) / d + 4; break;
+                    }
+                    h /= 6;
+                }
+                return ({ h: h, s: s, l: l });
+            },
+            hslToRgb: function (h, s, l) {
+                if (h == "") h = 0;
+                if (s == "") s = 0;
+                if (l == "") l = 0;
+                h = parseFloat(h);
+                s = parseFloat(s);
+                l = parseFloat(l);
+                if (h < 0) h = 0;
+                if (s < 0) s = 0;
+                if (l < 0) l = 0;
+                if (h >= 360) h = 359;
+                if (s > 100) s = 100;
+                if (l > 100) l = 100;
+                s /= 100;
+                l /= 100;
+                C = (1 - Math.abs(2 * l - 1)) * s;
+                hh = h / 60;
+                X = C * (1 - Math.abs(hh % 2 - 1));
+                r = g = b = 0;
+                if (hh >= 0 && hh < 1) {
+                    r = C;
+                    g = X;
+                } else if (hh >= 1 && hh < 2) {
+                    r = X;
+                    g = C;
+                } else if (hh >= 2 && hh < 3) {
+                    g = C;
+                    b = X;
+                } else if (hh >= 3 && hh < 4) {
+                    g = X;
+                    b = C;
+                } else if (hh >= 4 && hh < 5) {
+                    r = X;
+                    b = C;
+                } else {
+                    r = C;
+                    b = X;
+                }
+                m = l - C / 2;
+                r += m;
+                g += m;
+                b += m;
+                return ({ r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) });
+
+
+            }
+        };
+
+
+        function calc() {
+
+
+
+        }
+*/
 
     </script>
 
