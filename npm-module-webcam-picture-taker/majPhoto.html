@@ -78,14 +78,40 @@
         body {
             padding: 30px;
         }
+
+        .parent {
+            position: relative;
+        }
+
+        .cropper-dragger {
+            position: absolute;
+            display: none;
+            right: 40px;
+            top: 40px;
+
+        }
+
+        .frame {
+            width: 130px;
+            height: 130px;
+            border: 2px solid black;
+        }
+
+        #point {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: black;
+        }
     </style>
 </head>
 
 <body>
     <p></p>
+
     <div class="row">
         <div class="container">
-            <div class="col-md-8  col-md-offset-2">
+            <div class="col-md-10  col-md-offset-2">
                 <div class="card">
 
                     <div class="row">
@@ -102,278 +128,368 @@
                                 <input type="range" id="lightness" min="0" max="200" value="100">
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <canvas id="c1" style="border:1px black solid;"></canvas>
+                        <div class="col-md-6 parent" style="width: 330px;height: 250px;">
+
+                            <div>
+                                <canvas id="c1" style="border:1px black solid;" ></canvas>
+                            </div>
+
+                            <div class="cropper-dragger" onmousedown='mydragg.startMoving(this,"parent",event);'
+                                onmouseup='mydragg.stopMoving("parent");' style="width: 130px;height: 130px;">
+
+                                <div class="frame">
+                                </div>
+
+                                <div id="point" style="right: -3px;top: -3px;"></div>
+                                <div id="point" style="left: -3px;top: -3px;"></div>
+                                <div id="point" style="right: 60px;top: -3px;"></div>
+                                <div id="point" style="left: -3px;top: 60px;"></div>
+
+                                <div id="point" style="left: -3px;bottom: -3px;"></div>
+                                <div id="point" style="right: 60px;bottom: -3px;"></div>
+                                <div id="point" style="right: -3px;bottom: -3px;"></div>
+                                <div id="point" style="right: -3px;bottom: 60px;"></div>
+                            </div>
+
+                        </div>
+                        <div class="card-body text-center">
+
+                            <h4 class="card-title">CHARAFI Oussama</h4>
+                            <p class="card-text text-muted">UI/UX Designer</p>
+                            <p class="mt-4"><a href="#" class="btn btn-primary" onclick="startCounting(this)"><i
+                                        class="glyphicon glyphicon-camera"></i> Capturer</a>
+
+                                <a href="#" class="btn btn-primary" onclick="saveImageProfil()"><i
+                                        class="glyphicon glyphicon-save"></i> Save</a>
+                                <a href="#" class="btn btn-primary" onclick="showEditDiv()"><i
+                                        class="glyphicon glyphicon-edit"></i> Edit</a>
+                                <a href="#" class="btn btn-primary" onclick="showCropper()"><i
+                                        class="glyphicon glyphicon-resize-small"></i> Crop</a>
+                            </p>
+                            <span class="compt"> </span>
                         </div>
 
-                    </div>
-                    <div class="card-body text-center">
 
-                        <h4 class="card-title">CHARAFI Oussama</h4>
-                        <p class="card-text text-muted">UI/UX Designer</p>
-                        <p class="mt-4"><a href="#" class="btn btn-primary" onclick="startCounting(this)"><i
-                                    class="glyphicon glyphicon-camera"></i> Capturer</a>
 
-                            <a href="#" class="btn btn-primary" onclick="saveImageProfil()"><i
-                                    class="glyphicon glyphicon-save"></i> Save</a>
-                            <a href="#" class="btn btn-primary" onclick="showEditDiv()"><i
-                                    class="glyphicon glyphicon-edit"></i> Edit</a>
-                            <a href="#" class="btn btn-primary" onclick="showCropper()"><i
-                                    class="glyphicon glyphicon-resize-small"></i> Crop</a>
-                        </p>
-                        <span class="compt"> </span>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script>
+        <script>
 
-        var captured
+            var captured
 
-        const vlib = {
-            FPS: 30,
-            init() {
-                this.canvas = document.querySelector('#c1')
-                this.video = document.querySelector('#v2')
-                this.ctx = this.canvas.getContext('2d')
-                this.w = this.canvas.width = this.video.width
-                this.h = this.canvas.height = this.video.height
-                this.video.addEventListener('play', _ => this.copy())
-                this.startCamera()
+            const vlib = {
+                FPS: 30,
+                init() {
+                    this.canvas = document.querySelector('#c1')
+                    this.video = document.querySelector('#v2')
+                    this.ctx = this.canvas.getContext('2d')
+                    this.w = this.canvas.width = this.video.width
+                    this.h = this.canvas.height = this.video.height
+                    this.video.addEventListener('play', _ => this.copy())
+                    this.startCamera()
 
-            },
-            copy() {
-                this.ctx.drawImage(this.video, 0, 0, this.w, this.h)
-                this.process()
-                if (this.video.ended || this.video.paused)
-                    return
-                this.captured = setTimeout(_ => this.copy(), 1000 / this.FPS)
-            },
-            capturer() {
+                },
+                copy() {
+                    this.ctx.drawImage(this.video, 0, 0, this.w, this.h)
+                    this.process()
+                    if (this.video.ended || this.video.paused)
+                        return
+                    this.captured = setTimeout(_ => this.copy(), 1000 / this.FPS)
+                },
+                capturer() {
 
-                clearInterval(this.captured)
-                applyFilter(this.ctx)
+                    clearInterval(this.captured)
+                    applyFilter(this.ctx)
 
-                this.ctx.drawImage(this.video, 0, 0, this.w, this.h)
-                applyFilterSt(this.video)
+                    this.ctx.drawImage(this.video, 0, 0, this.w, this.h)
+                    applyFilterSt(this.video)
 
-            },
-            process() {
-                console.log("hahaha")
-                const imageData = this.ctx.getImageData(0, 0, this.w, this.h)
-                applyFilter(this.ctx)
+                },
+                process() {
+                    const imageData = this.ctx.getImageData(0, 0, this.w, this.h)
+                    applyFilter(this.ctx)
 
-                /*
-                for (let i = 0; i < d.length; i += 4) {
-
-                    const r = d[i], g = d[i + 1], b = d[i + 2], a = d[i + 3]
-
-                    d[i] = d[i] * contrast + intercept;
-                    d[i + 1] = d[i + 1] * contrast + intercept;
-                    d[i + 2] = d[i + 2] * contrast + intercept;
-
-
-                    //data[i] = data[i + 1] = data[i + 2] = (r + g + b) / 3
-                }*/
-                this.ctx.putImageData(imageData, 0, 0)
-
-            },
-            async startCamera() {
-                this.video2 = document.querySelector('#v2')
-                let stream
-                try {
-                    stream = await navigator.mediaDevices.getUserMedia({ video: true })
-                    this.video2.srcObject = stream
-
-
-
-                } catch (error) {
-                    console.log("something was wrong")
-                    videoReplace = document.querySelector('#v2')
-                    videoReplace.src = "Big_Buck_Bunny_Trailer.mp4"
-                }
-            }
-        }
-        vlib.init()
-
-        function startCounting(link) {
-
-            this.captured = false
-            spanChrono = document.querySelector('.compt')
-
-            var cc = 4;
-
-            link.classList.add('btn-default');
-            link.classList.remove('btn-primary');
-            link.onclick = null;
-
-            var interval = setInterval(function () {
-                spanChrono.innerHTML = '  <i class="glyphicon glyphicon-time"></i>  ' + --cc + ' s';
-
-                if (cc == 0) {
-                    clearInterval(interval);
-
-                    link.classList.add('btn-primary');
-                    link.classList.remove('btn-default');
-                    link.onclick = "startCounting(" + link + ")";
-
-                    link.onclick = function () {
-                        startCounting(link)
-                    }
-                    spanChrono.innerHTML = ""
-                    vlib.capturer()
-                }
-
-            }, 1000);
-        }
-
-        function saveImageProfil() {
-            let imgData = vlib.canvas.toDataURL("image/png");
-            localStorage.setItem("imgData", imgData.replace(/^data:image\/(png|jpg);base64,/, ""));
-            window.location = "profile.html";
-        }
-
-        function showEditDiv() {
-            let state = document.getElementById('edit').style.display;
-            if (state == "block")
-                document.getElementById('edit').style.display = "none";
-            else
-                document.getElementById('edit').style.display = "block";
-
-        }
-
-        vi = document.querySelector('#v2')
-
-        /*
-                function contrastImage(imgData, contrast) {	//input range [-100..100]
-                    var d = imgData.data;
-                    contrast = (contrast / 100) + 1;	//convert to decimal & shift range: [0..2]
-                    var intercept = 128 * (1 - contrast);
-                    for (var i = 0; i < d.length; i += 4) {	//r,g,b,a
+                    /*
+                    for (let i = 0; i < d.length; i += 4) {
+    
+                        const r = d[i], g = d[i + 1], b = d[i + 2], a = d[i + 3]
+    
                         d[i] = d[i] * contrast + intercept;
                         d[i + 1] = d[i + 1] * contrast + intercept;
                         d[i + 2] = d[i + 2] * contrast + intercept;
+    
+    
+                        //data[i] = data[i + 1] = data[i + 2] = (r + g + b) / 3
+                    }*/
+                    this.ctx.putImageData(imageData, 0, 0)
+
+                },
+                async startCamera() {
+                    this.video2 = document.querySelector('#v2')
+                    let stream
+                    try {
+                        stream = await navigator.mediaDevices.getUserMedia({ video: true })
+                        this.video2.srcObject = stream
+
+
+
+                    } catch (error) {
+                        console.log("something was wrong")
+                        videoReplace = document.querySelector('#v2')
+                        videoReplace.src = "Big_Buck_Bunny_Trailer.mp4"
                     }
-        
-        
                 }
-                */
-        function applyFilter(ctx) {
-            ctx.filter = 'contrast(' + contr + '%) hue-rotate(' + hu + 'deg) saturate(' + sat + '%) brightness(' + ligh + '%)';
-            vi.style.filter = ctx.filter;
-        }
+            }
+            vlib.init()
 
-        function applyFilterSt(vi) {
-            vi.style.filter = 'contrast(' + contr + '%) hue-rotate(' + hu + 'deg) saturate(' + sat + '%) brightness(' + ligh + '%)';
-            setTimeout(_ => applyFilterSt(vi), 1000 / this.FPS)
+            function startCounting(link) {
 
-        }
+                this.captured = false
+                spanChrono = document.querySelector('.compt')
 
-        var rng1 = document.querySelector("#contrast"),
-            rng2 = document.querySelector("#hue"),
-            rng3 = document.querySelector("#saturation"),
-            rng4 = document.querySelector("#lightness")
+                var cc = 4;
 
-        var contr = rng1.value, hu = rng2.value, sat = rng3.value, ligh = rng4.value
+                link.classList.add('btn-default');
+                link.classList.remove('btn-primary');
+                link.onclick = null;
+
+                var interval = setInterval(function () {
+                    spanChrono.innerHTML = '  <i class="glyphicon glyphicon-time"></i>  ' + --cc + ' s';
+
+                    if (cc == 0) {
+                        clearInterval(interval);
+
+                        link.classList.add('btn-primary');
+                        link.classList.remove('btn-default');
+                        link.onclick = "startCounting(" + link + ")";
+
+                        link.onclick = function () {
+                            startCounting(link)
+                        }
+                        spanChrono.innerHTML = ""
+                        vlib.capturer()
+                    }
+
+                }, 1000);
+            }
+
+            function saveImageProfil() {
+                let imgData = vlib.canvas.toDataURL("image/png");
+                localStorage.setItem("imgData", imgData.replace(/^data:image\/(png|jpg);base64,/, ""));
+                window.location = "profile.html";
+            }
+
+            function showEditDiv() {
+                let state = document.getElementById('edit').style.display;
+                if (state == "block")
+                    document.getElementById('edit').style.display = "none";
+                else
+                    document.getElementById('edit').style.display = "block";
+
+            }
+
+            vi = document.querySelector('#v2')
+
+            /*
+                    function contrastImage(imgData, contrast) {	//input range [-100..100]
+                        var d = imgData.data;
+                        contrast = (contrast / 100) + 1;	//convert to decimal & shift range: [0..2]
+                        var intercept = 128 * (1 - contrast);
+                        for (var i = 0; i < d.length; i += 4) {	//r,g,b,a
+                            d[i] = d[i] * contrast + intercept;
+                            d[i + 1] = d[i + 1] * contrast + intercept;
+                            d[i + 2] = d[i + 2] * contrast + intercept;
+                        }
+            
+            
+                    }
+                    */
+            function applyFilter(ctx) {
+                ctx.filter = 'contrast(' + contr + '%) hue-rotate(' + hu + 'deg) saturate(' + sat + '%) brightness(' + ligh + '%)';
+                vi.style.filter = ctx.filter;
+            }
+
+            function applyFilterSt(vi) {
+                vi.style.filter = 'contrast(' + contr + '%) hue-rotate(' + hu + 'deg) saturate(' + sat + '%) brightness(' + ligh + '%)';
+                setTimeout(_ => applyFilterSt(vi), 1000 / this.FPS)
+
+            }
+
+            var rng1 = document.querySelector("#contrast"),
+                rng2 = document.querySelector("#hue"),
+                rng3 = document.querySelector("#saturation"),
+                rng4 = document.querySelector("#lightness")
+
+            var contr = rng1.value, hu = rng2.value, sat = rng3.value, ligh = rng4.value
 
 
-        rng1.addEventListener('change', (evt) => {
-            contr = rng1.value;
-        })
-        rng2.addEventListener('change', (evt) => {
-            hu = rng2.value;
-        })
-        rng3.addEventListener('change', (evt) => {
-            sat = rng3.value;
-        })
-        rng4.addEventListener('change', (evt) => {
-            ligh = rng4.value;
-        })
-        /*
-                var operations = {
-        
-                    rgbToHsl: function (r, g, b) {
-                        r /= 255, g /= 255, b /= 255;
-                        var max = Math.max(r, g, b), min = Math.min(r, g, b);
-                        var h, s, l = (max + min) / 2;
-                        if (max == min) {
-                            h = s = 0; // achromatic
-                        } else {
-                            var d = max - min;
-                            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-                            switch (max) {
-                                case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-                                case g: h = (b - r) / d + 2; break;
-                                case b: h = (r - g) / d + 4; break;
+            rng1.addEventListener('change', (evt) => {
+                contr = rng1.value;
+            })
+            rng2.addEventListener('change', (evt) => {
+                hu = rng2.value;
+            })
+            rng3.addEventListener('change', (evt) => {
+                sat = rng3.value;
+            })
+            rng4.addEventListener('change', (evt) => {
+                ligh = rng4.value;
+            })
+            /*
+                    var operations = {
+            
+                        rgbToHsl: function (r, g, b) {
+                            r /= 255, g /= 255, b /= 255;
+                            var max = Math.max(r, g, b), min = Math.min(r, g, b);
+                            var h, s, l = (max + min) / 2;
+                            if (max == min) {
+                                h = s = 0; // achromatic
+                            } else {
+                                var d = max - min;
+                                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                                switch (max) {
+                                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                                    case g: h = (b - r) / d + 2; break;
+                                    case b: h = (r - g) / d + 4; break;
+                                }
+                                h /= 6;
                             }
-                            h /= 6;
+                            return ({ h: h, s: s, l: l });
+                        },
+                        hslToRgb: function (h, s, l) {
+                            if (h == "") h = 0;
+                            if (s == "") s = 0;
+                            if (l == "") l = 0;
+                            h = parseFloat(h);
+                            s = parseFloat(s);
+                            l = parseFloat(l);
+                            if (h < 0) h = 0;
+                            if (s < 0) s = 0;
+                            if (l < 0) l = 0;
+                            if (h >= 360) h = 359;
+                            if (s > 100) s = 100;
+                            if (l > 100) l = 100;
+                            s /= 100;
+                            l /= 100;
+                            C = (1 - Math.abs(2 * l - 1)) * s;
+                            hh = h / 60;
+                            X = C * (1 - Math.abs(hh % 2 - 1));
+                            r = g = b = 0;
+                            if (hh >= 0 && hh < 1) {
+                                r = C;
+                                g = X;
+                            } else if (hh >= 1 && hh < 2) {
+                                r = X;
+                                g = C;
+                            } else if (hh >= 2 && hh < 3) {
+                                g = C;
+                                b = X;
+                            } else if (hh >= 3 && hh < 4) {
+                                g = X;
+                                b = C;
+                            } else if (hh >= 4 && hh < 5) {
+                                r = X;
+                                b = C;
+                            } else {
+                                r = C;
+                                b = X;
+                            }
+                            m = l - C / 2;
+                            r += m;
+                            g += m;
+                            b += m;
+                            return ({ r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) });
+            
+            
                         }
-                        return ({ h: h, s: s, l: l });
-                    },
-                    hslToRgb: function (h, s, l) {
-                        if (h == "") h = 0;
-                        if (s == "") s = 0;
-                        if (l == "") l = 0;
-                        h = parseFloat(h);
-                        s = parseFloat(s);
-                        l = parseFloat(l);
-                        if (h < 0) h = 0;
-                        if (s < 0) s = 0;
-                        if (l < 0) l = 0;
-                        if (h >= 360) h = 359;
-                        if (s > 100) s = 100;
-                        if (l > 100) l = 100;
-                        s /= 100;
-                        l /= 100;
-                        C = (1 - Math.abs(2 * l - 1)) * s;
-                        hh = h / 60;
-                        X = C * (1 - Math.abs(hh % 2 - 1));
-                        r = g = b = 0;
-                        if (hh >= 0 && hh < 1) {
-                            r = C;
-                            g = X;
-                        } else if (hh >= 1 && hh < 2) {
-                            r = X;
-                            g = C;
-                        } else if (hh >= 2 && hh < 3) {
-                            g = C;
-                            b = X;
-                        } else if (hh >= 3 && hh < 4) {
-                            g = X;
-                            b = C;
-                        } else if (hh >= 4 && hh < 5) {
-                            r = X;
-                            b = C;
-                        } else {
-                            r = C;
-                            b = X;
-                        }
-                        m = l - C / 2;
-                        r += m;
-                        g += m;
-                        b += m;
-                        return ({ r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) });
-        
-        
+                    };
+            
+            
+                    function calc() {
+            
+            
+            
                     }
-                };
-        
-        
-                function calc() {
-        
-        
-        
+            */
+
+
+            function showCropper() {
+
+                let state = document.querySelector('.cropper-dragger').style.display;
+                if (state == "block")
+                    document.querySelector('.col-md-6 .cropper-dragger').style.display = "none";
+                else {
+                    document.querySelector('.col-md-6 .cropper-dragger').style.display = "block";
+                    console.log(state)
                 }
-        */
 
 
-        function showCropper(params) {
+            }
 
-        }
 
-    </script>
+
+            var mydragg = function () {
+                return {
+                    move: function (divid, xpos, ypos) {
+                        divid.style.left = xpos + 'px';
+                        divid.style.top = ypos + 'px';
+                    },
+                    startMoving: function (divid, container, evt) {
+
+console.log(document.querySelector('.'+container))
+console.log(document.querySelector('.'+container).offsetWidth)
+console.log("okay")
+
+
+                        evt = evt || window.event;
+                        var posX = evt.clientX,
+                            posY = evt.clientY,
+                            divTop = divid.style.top,
+                            divLeft = divid.style.left,
+                            eWi = parseInt(divid.style.width),
+                            eHe = parseInt(divid.style.height),
+                            cWi = parseInt(document.querySelector('.'+container).offsetWidth),
+                            cHe = parseInt(document.querySelector('.'+container).offsetWidth);
+                            document.querySelector('.'+container).style.cursor = 'move';
+
+
+
+
+
+                        divTop = divTop.replace('px', '');
+                        divLeft = divLeft.replace('px', '');
+                        var diffX = posX - divLeft,
+                            diffY = posY - divTop;
+                        document.onmousemove = function (evt) {
+                            evt = evt || window.event;
+                            var posX = evt.clientX,
+                                posY = evt.clientY,
+                                aX = posX - diffX,
+                                aY = posY - diffY;
+                            if (aX < 0) aX = 0;
+                            if (aY < 0) aY = 0;
+                            if (aX + eWi > cWi) aX = cWi - eWi;
+                            console.log("height="+eHe)
+                            if (aY + eHe > cHe) aY = cHe - eHe;
+                            console.log("heightsm="+aY + eHe)
+                            mydragg.move(divid, aX, aY);
+                        }
+                    },
+                    stopMoving: function (container) {
+                        var a = document.createElement('script');
+                        document.querySelector('.'+container).style.cursor = 'default';
+                        document.onmousemove = function () { }
+                    },
+                }
+            }();
+
+
+
+
+        </script>
 
 </body>
 
