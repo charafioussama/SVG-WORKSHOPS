@@ -86,8 +86,8 @@
         .cropper-dragger {
             position: absolute;
             display: none;
-            right: 40px;
-            top: 40px;
+            left: 50px;
+            top: 50px;
 
         }
 
@@ -128,7 +128,7 @@
                                 <input type="range" id="lightness" min="0" max="200" value="100">
                             </div>
                         </div>
-                        <div class="col-md-6 parent" style="width: 330px;height: 250px;">
+                        <div class="col-md-6 parent" style="width: 330px;height: 250px;padding :0;">
 
                             <div>
                                 <canvas id="c1" style="border:1px black solid;" ></canvas>
@@ -152,26 +152,30 @@
                             </div>
 
                         </div>
-                        <div class="card-body text-center">
-
-                            <h4 class="card-title">CHARAFI Oussama</h4>
-                            <p class="card-text text-muted">UI/UX Designer</p>
-                            <p class="mt-4"><a href="#" class="btn btn-primary" onclick="startCounting(this)"><i
-                                        class="glyphicon glyphicon-camera"></i> Capturer</a>
-
-                                <a href="#" class="btn btn-primary" onclick="saveImageProfil()"><i
-                                        class="glyphicon glyphicon-save"></i> Save</a>
-                                <a href="#" class="btn btn-primary" onclick="showEditDiv()"><i
-                                        class="glyphicon glyphicon-edit"></i> Edit</a>
-                                <a href="#" class="btn btn-primary" onclick="showCropper()"><i
-                                        class="glyphicon glyphicon-resize-small"></i> Crop</a>
-                            </p>
-                            <span class="compt"> </span>
-                        </div>
-
+                        
 
 
                     </div>
+                    <div class="row">
+
+                            <div class="card-body text-center">
+    
+                                <h4 class="card-title">CHARAFI Oussama</h4>
+                                <p class="card-text text-muted">UI/UX Designer</p>
+                                <p class="mt-4"><a href="#" class="btn btn-primary" onclick="startCounting(this)"><i
+                                            class="glyphicon glyphicon-camera"></i> Capturer</a>
+    
+                                    <a href="#" class="btn btn-primary" onclick="saveImageProfil()"><i
+                                            class="glyphicon glyphicon-save"></i> Save</a>
+                                    <a href="#" class="btn btn-primary" onclick="showEditDiv()"><i
+                                            class="glyphicon glyphicon-edit"></i> Edit</a>
+                                    <a href="#" class="btn btn-primary" onclick="showCropper()"><i
+                                            class="glyphic  on glyphicon-resize-small"></i> Crop</a>
+                                </p>
+                                <span class="compt"> </span>
+                            </div>
+    
+                        </div>
                 </div>
             </div>
         </div>
@@ -186,8 +190,8 @@
                     this.canvas = document.querySelector('#c1')
                     this.video = document.querySelector('#v2')
                     this.ctx = this.canvas.getContext('2d')
-                    this.w = this.canvas.width = this.video.width
-                    this.h = this.canvas.height = this.video.height
+                    this.w = this.canvas.width = document.querySelector('.parent').offsetWidth
+                    this.h = this.canvas.height = document.querySelector('.parent').offsetHeight
                     this.video.addEventListener('play', _ => this.copy())
                     this.startCamera()
 
@@ -439,11 +443,6 @@
                     },
                     startMoving: function (divid, container, evt) {
 
-console.log(document.querySelector('.'+container))
-console.log(document.querySelector('.'+container).offsetWidth)
-console.log("okay")
-
-
                         evt = evt || window.event;
                         var posX = evt.clientX,
                             posY = evt.clientY,
@@ -451,12 +450,9 @@ console.log("okay")
                             divLeft = divid.style.left,
                             eWi = parseInt(divid.style.width),
                             eHe = parseInt(divid.style.height),
-                            cWi = parseInt(document.querySelector('.'+container).offsetWidth),
-                            cHe = parseInt(document.querySelector('.'+container).offsetWidth);
+                            cWi = parseInt(document.querySelector('.'+container).offsetWidth)+2,
+                            cHe = parseInt(document.querySelector('.'+container).offsetHeight)+2;
                             document.querySelector('.'+container).style.cursor = 'move';
-
-
-
 
 
                         divTop = divTop.replace('px', '');
@@ -472,9 +468,7 @@ console.log("okay")
                             if (aX < 0) aX = 0;
                             if (aY < 0) aY = 0;
                             if (aX + eWi > cWi) aX = cWi - eWi;
-                            console.log("height="+eHe)
                             if (aY + eHe > cHe) aY = cHe - eHe;
-                            console.log("heightsm="+aY + eHe)
                             mydragg.move(divid, aX, aY);
                         }
                     },
