@@ -88,16 +88,17 @@
             display: none;
             left: 50px;
             top: 50px;
-
         }
 
         .frame {
             width: 130px;
             height: 130px;
             border: 2px solid black;
+            position: absolute;
+
         }
 
-        #point {
+        .point {
             position: absolute;
             width: 10px;
             height: 10px;
@@ -131,7 +132,7 @@
                         <div class="col-md-6 parent" style="width: 330px;height: 250px;padding :0;">
 
                             <div>
-                                <canvas id="c1" style="border:1px black solid;" ></canvas>
+                                <canvas id="c1" style="border:1px black solid;"></canvas>
                             </div>
 
                             <div class="cropper-dragger" onmousedown='mydragg.startMoving(this,"parent",event);'
@@ -140,42 +141,42 @@
                                 <div class="frame">
                                 </div>
 
-                                <div id="point" style="right: -3px;top: -3px;"></div>
-                                <div id="point" style="left: -3px;top: -3px;"></div>
-                                <div id="point" style="right: 60px;top: -3px;"></div>
-                                <div id="point" style="left: -3px;top: 60px;"></div>
+                                <div class="point" id="pr1" style="right: -3px;top: -3px;"></div>
+                                <div class="point" id="pr2" style="left: -3px;top: -3px;"></div>
+                                <div class="point" id="pr3" style="right: 60px;top: -3px;"></div>
+                                <div class="point" id="pr4" style="left: -3px;top: 60px;"></div>
 
-                                <div id="point" style="left: -3px;bottom: -3px;"></div>
-                                <div id="point" style="right: 60px;bottom: -3px;"></div>
-                                <div id="point" style="right: -3px;bottom: -3px;"></div>
-                                <div id="point" style="right: -3px;bottom: 60px;"></div>
+                                <div class="point" id="pr5" style="left: -3px;bottom: -3px;"></div>
+                                <div class="point" id="pr6" style="right: 60px;bottom: -3px;"></div>
+                                <div class="point" id="pr7" style="right: -3px;bottom: -3px;"></div>
+                                <div class="point" id="pr8" style="right: -3px;bottom: 60px;"></div>
                             </div>
 
                         </div>
-                        
+
 
 
                     </div>
                     <div class="row">
 
-                            <div class="card-body text-center">
-    
-                                <h4 class="card-title">CHARAFI Oussama</h4>
-                                <p class="card-text text-muted">UI/UX Designer</p>
-                                <p class="mt-4"><a href="#" class="btn btn-primary" onclick="startCounting(this)"><i
-                                            class="glyphicon glyphicon-camera"></i> Capturer</a>
-    
-                                    <a href="#" class="btn btn-primary" onclick="saveImageProfil()"><i
-                                            class="glyphicon glyphicon-save"></i> Save</a>
-                                    <a href="#" class="btn btn-primary" onclick="showEditDiv()"><i
-                                            class="glyphicon glyphicon-edit"></i> Edit</a>
-                                    <a href="#" class="btn btn-primary" onclick="showCropper()"><i
-                                            class="glyphic  on glyphicon-resize-small"></i> Crop</a>
-                                </p>
-                                <span class="compt"> </span>
-                            </div>
-    
+                        <div class="card-body text-center">
+
+                            <h4 class="card-title">CHARAFI Oussama</h4>
+                            <p class="card-text text-muted">UI/UX Designer</p>
+                            <p class="mt-4"><a href="#" class="btn btn-primary" onclick="startCounting(this)"><i
+                                        class="glyphicon glyphicon-camera"></i> Capturer</a>
+
+                                <a href="#" class="btn btn-primary" onclick="saveImageProfil()"><i
+                                        class="glyphicon glyphicon-save"></i> Save</a>
+                                <a href="#" class="btn btn-primary" onclick="showEditDiv()"><i
+                                        class="glyphicon glyphicon-edit"></i> Edit</a>
+                                <a href="#" class="btn btn-primary" onclick="showCropper()"><i
+                                        class="glyphic  on glyphicon-resize-small"></i> Crop</a>
+                            </p>
+                            <span class="compt"> </span>
                         </div>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -443,16 +444,19 @@
                     },
                     startMoving: function (divid, container, evt) {
 
+                        var style = getComputedStyle(divid);
+
+
                         evt = evt || window.event;
                         var posX = evt.clientX,
                             posY = evt.clientY,
-                            divTop = divid.style.top,
-                            divLeft = divid.style.left,
+                            divTop = style.top,
+                            divLeft = style.left,
                             eWi = parseInt(divid.style.width),
                             eHe = parseInt(divid.style.height),
-                            cWi = parseInt(document.querySelector('.'+container).offsetWidth)+2,
-                            cHe = parseInt(document.querySelector('.'+container).offsetHeight)+2;
-                            document.querySelector('.'+container).style.cursor = 'move';
+                            cWi = parseInt(document.querySelector('.' + container).offsetWidth) + 2,
+                            cHe = parseInt(document.querySelector('.' + container).offsetHeight) + 2;
+                        document.querySelector('.' + container).style.cursor = 'move';
 
 
                         divTop = divTop.replace('px', '');
@@ -474,13 +478,42 @@
                     },
                     stopMoving: function (container) {
                         var a = document.createElement('script');
-                        document.querySelector('.'+container).style.cursor = 'default';
+                        document.querySelector('.' + container).style.cursor = 'default';
                         document.onmousemove = function () { }
                     },
                 }
             }();
 
+            function resizeHandle() {
 
+            }
+
+
+
+            var resizable = document.querySelector('.cropper-dragger'),
+                resizer = document.querySelector('#pr1'),
+                startX, startY, startWidth, startHeight;
+
+            resizer.addEventListener('mousedown', initDrag, false);
+
+            function initDrag(e) {
+                startX = e.clientX;
+                startY = e.clientY;
+                startWidth = parseInt(document.defaultView.getComputedStyle(resizable).width, 10);
+                startHeight = parseInt(document.defaultView.getComputedStyle(resizable).height, 10);
+                document.documentElement.addEventListener('mousemove', doDrag, false);
+                document.documentElement.addEventListener('mouseup', stopDrag, false);
+            }
+
+            function doDrag(e) {
+                resizable.style.width = (startWidth + e.clientX - startX) + 'px';
+                resizable.style.height = (startHeight + e.clientY - startY) + 'px';
+            }
+
+            function stopDrag(e) {
+                document.documentElement.removeEventListener('mousemove', doDrag, false);
+                document.documentElement.removeEventListener('mouseup', stopDrag, false);
+            }
 
 
         </script>
