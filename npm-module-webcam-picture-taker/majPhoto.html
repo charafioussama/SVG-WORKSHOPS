@@ -88,6 +88,7 @@
             display: none;
             left: 50px;
             top: 50px;
+            bottom: 0px;
         }
 
         .frame {
@@ -138,7 +139,7 @@
                             <div class="cropper-dragger" style="width: 130px;height: 130px;">
 
                                 <div class="frame" onmousedown='mydragg.startMoving(this.parentNode,"parent",event);'
-                                onmouseup='mydragg.stopMoving("parent");'>
+                                    onmouseup='mydragg.stopMoving("parent");'>
                                 </div>
 
                                 <div class="point" id="pr1" style="right: -3px;top: -3px;"></div>
@@ -486,52 +487,128 @@
 
 
             var resizable = document.querySelector('.cropper-dragger'),
-                resizer = document.querySelector('#pr7'),
+                resizer1 = document.querySelector('#pr7'),
+                resizer2 = document.querySelector('#pr6'),
+                
+
                 parent = document.querySelector('.parent'),
                 frame = document.querySelector('.frame'),
-                pr3 = document.querySelector('#pr3'),
-                pr4 = document.querySelector('#pr4'),
-                pr6 = document.querySelector('#pr6'),
-                pr8 = document.querySelector('#pr8')
+                resizer3 = document.querySelector('#pr3'),
+                resizer4 = document.querySelector('#pr4'),
+                resizer5 = document.querySelector('#pr8')
 
 
-            resizer.style.background = 'red';
-            resizer.style.cursor = 'se-resize';
-            resizer.addEventListener('mousedown', initResize, false);
+            resizer1.style.background = 'red';
+            resizer1.style.cursor = 'se-resize';
+            resizer1.addEventListener('mousedown', initResize, false);
 
+            resizer2.style.background = 'blue';
+            resizer2.style.cursor = 'n-resize';
+            resizer2.addEventListener('mousedown', initResize, false);
+
+            resizer3.style.background = 'aqua';
+            resizer3.style.cursor = 'n-resize';
+            resizer3.addEventListener('mousedown', initResize, false);
+
+            resizer4.style.background = 'orange';
+            resizer4.style.cursor = 'ew-resize';
+            resizer4.addEventListener('mousedown', initResize, false);
+
+            resizer5.style.background = 'gray';
+            resizer5.style.cursor = 'ew-resize';
+            resizer5.addEventListener('mousedown', initResize, false);
 
             function initResize(e) {
+
                 parent.addEventListener('mousemove', Resize, false);
-                resizer.addEventListener('mouseup', stopResize, false);
+                resizer1.addEventListener('mouseup', stopResize, false);
+                resizer2.addEventListener('mouseup', stopResize, false);
+                resizer3.addEventListener('mouseup', stopResize, false);
+                resizer4.addEventListener('mouseup', stopResize, false);
+                resizer5.addEventListener('mouseup', stopResize, false);
+
+
+
+
             }
             function Resize(e) {
-                console.log("resize")
+                console.log(e.target.id)
 
                 var rect = parent.getBoundingClientRect();
-                console.log(e.clientX-rect.left-resizable.offsetLeft)
+                console.log("right" + rect.right)
 
-                resizable.style.width = (e.clientX-rect.left-resizable.offsetLeft) + 'px';
-                resizable.style.height = (e.clientY-rect.top - resizable.offsetTop) + 'px';
+                if (e.clientX > rect.right || e.clientY > rect.bottom) {
+                    return;
+                }
+
+                if (e.target.id == "pr6") {
+                    console.log("hna")
+
+                    resizable.style.height = (e.clientY - rect.top - resizable.offsetTop) + 'px';
+                    frame.style.height = resizable.style.height
+                    pr4.style.top = (e.clientY - rect.top - resizable.offsetTop) / 2 + 'px'
+                    pr8.style.bottom = (e.clientY - rect.top - 20 - resizable.offsetTop) / 2 + 'px'
 
 
-                pr3.style.right=(e.clientX-rect.left-resizable.offsetLeft)/2 +'px'
-                pr4.style.top=(e.clientY-rect.top - resizable.offsetTop)/2 +'px'
-                pr6.style.left=(e.clientX-rect.left-resizable.offsetLeft)/2 +'px'
-                pr8.style.bottom=(e.clientY-rect.top-20 - resizable.offsetTop)/2 +'px'
 
-                pr4.style.background = 'yellow';
+                }else if(e.target.id == "pr3"){
+                    
+                    console.log("resizeaqua problem")
+                    resizable.style.height = (e.clientY - rect.top - resizable.offsetTop) + 'px';
+                    frame.style.height = resizable.style.height
+                    pr4.style.top = (e.clientY - rect.top - resizable.offsetTop) / 2 + 'px'
+                    pr8.style.bottom = (e.clientY - rect.top - 20 - resizable.offsetTop) / 2 + 'px'
+
+                    
+
+                }else if(e.target.id == "pr4"){
+
+                    console.log("resizerornge problem")
+
+                    
+                }
+                else if(e.target.id == "pr8"){
+
+
+
+                    console.log("resizergray")
+
+                    resizable.style.width = (e.clientX - rect.left - resizable.offsetLeft) + 'px';
+                    frame.style.width = resizable.style.width
+                    pr3.style.left = (e.clientX - rect.left - resizable.offsetLeft) / 2 + 'px'
+                    pr6.style.left = (e.clientX - rect.left - resizable.offsetLeft) / 2 + 'px'
+
+
+                }
+                
+                 else if (e.target.id == "pr7") {
+                    console.log("la")
+
+                    resizable.style.width = (e.clientX - rect.left - resizable.offsetLeft) + 'px';
+                    resizable.style.height = (e.clientY - rect.top - resizable.offsetTop) + 'px';
+
+                    pr3.style.right = (e.clientX - rect.left - resizable.offsetLeft) / 2 + 'px'
+                    pr4.style.top = (e.clientY - rect.top - resizable.offsetTop) / 2 + 'px'
+                    pr6.style.left = (e.clientX - rect.left - resizable.offsetLeft) / 2 + 'px'
+                    pr8.style.bottom = (e.clientY - rect.top - 20 - resizable.offsetTop) / 2 + 'px'
+
+                    frame.style.width = resizable.style.width
+                    frame.style.height = resizable.style.height
+
+                }
+
+
                 pr8.style.background = 'green';
-                console.log(pr4.style.top)
-                console.log(pr8.style.bottom)
-                frame.style.width=resizable.style.width
-                frame.style.height=resizable.style.height
+
+
+
 
             }
             function stopResize(e) {
                 console.log("stop")
 
                 parent.removeEventListener('mousemove', Resize, false);
-                resizer.removeEventListener('mouseup', stopResize, false);
+                resizer1.removeEventListener('mouseup', stopResize, false);
             }
 
         </script>
