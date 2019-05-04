@@ -135,10 +135,10 @@
                                 <canvas id="c1" style="border:1px black solid;"></canvas>
                             </div>
 
-                            <div class="cropper-dragger" onmousedown='mydragg.startMoving(this,"parent",event);'
-                                onmouseup='mydragg.stopMoving("parent");' style="width: 130px;height: 130px;">
+                            <div class="cropper-dragger" style="width: 130px;height: 130px;">
 
-                                <div class="frame">
+                                <div class="frame" onmousedown='mydragg.startMoving(this.parentNode,"parent",event);'
+                                onmouseup='mydragg.stopMoving("parent");'>
                                 </div>
 
                                 <div class="point" id="pr1" style="right: -3px;top: -3px;"></div>
@@ -484,37 +484,55 @@
                 }
             }();
 
-            function resizeHandle() {
-
-            }
-
-
 
             var resizable = document.querySelector('.cropper-dragger'),
-                resizer = document.querySelector('#pr1'),
-                startX, startY, startWidth, startHeight;
+                resizer = document.querySelector('#pr7'),
+                parent = document.querySelector('.parent'),
+                frame = document.querySelector('.frame'),
+                pr3 = document.querySelector('#pr3'),
+                pr4 = document.querySelector('#pr4'),
+                pr6 = document.querySelector('#pr6'),
+                pr8 = document.querySelector('#pr8')
 
-            resizer.addEventListener('mousedown', initDrag, false);
 
-            function initDrag(e) {
-                startX = e.clientX;
-                startY = e.clientY;
-                startWidth = parseInt(document.defaultView.getComputedStyle(resizable).width, 10);
-                startHeight = parseInt(document.defaultView.getComputedStyle(resizable).height, 10);
-                document.documentElement.addEventListener('mousemove', doDrag, false);
-                document.documentElement.addEventListener('mouseup', stopDrag, false);
+            resizer.style.background = 'red';
+            resizer.style.cursor = 'se-resize';
+            resizer.addEventListener('mousedown', initResize, false);
+
+
+            function initResize(e) {
+                parent.addEventListener('mousemove', Resize, false);
+                resizer.addEventListener('mouseup', stopResize, false);
             }
+            function Resize(e) {
+                console.log("resize")
 
-            function doDrag(e) {
-                resizable.style.width = (startWidth + e.clientX - startX) + 'px';
-                resizable.style.height = (startHeight + e.clientY - startY) + 'px';
+                var rect = parent.getBoundingClientRect();
+                console.log(e.clientX-rect.left-resizable.offsetLeft)
+
+                resizable.style.width = (e.clientX-rect.left-resizable.offsetLeft) + 'px';
+                resizable.style.height = (e.clientY-rect.top - resizable.offsetTop) + 'px';
+
+
+                pr3.style.right=(e.clientX-rect.left-resizable.offsetLeft)/2 +'px'
+                pr4.style.top=(e.clientY-rect.top - resizable.offsetTop)/2 +'px'
+                pr6.style.left=(e.clientX-rect.left-resizable.offsetLeft)/2 +'px'
+                pr8.style.bottom=(e.clientY-rect.top-20 - resizable.offsetTop)/2 +'px'
+
+                pr4.style.background = 'yellow';
+                pr8.style.background = 'green';
+                console.log(pr4.style.top)
+                console.log(pr8.style.bottom)
+                frame.style.width=resizable.style.width
+                frame.style.height=resizable.style.height
+
             }
+            function stopResize(e) {
+                console.log("stop")
 
-            function stopDrag(e) {
-                document.documentElement.removeEventListener('mousemove', doDrag, false);
-                document.documentElement.removeEventListener('mouseup', stopDrag, false);
+                parent.removeEventListener('mousemove', Resize, false);
+                resizer.removeEventListener('mouseup', stopResize, false);
             }
-
 
         </script>
 
