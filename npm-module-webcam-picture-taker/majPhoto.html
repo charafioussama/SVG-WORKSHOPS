@@ -88,7 +88,12 @@
             display: none;
             left: 50px;
             top: 50px;
-            bottom: 0px;
+        }
+
+        .reverse-cropper-dragger {
+            position: absolute;
+            left: 50px;
+            bottom: 50px;
         }
 
         .frame {
@@ -104,6 +109,7 @@
             width: 10px;
             height: 10px;
             background-color: black;
+            padding:5px;
         }
     </style>
 </head>
@@ -489,7 +495,7 @@
             var resizable = document.querySelector('.cropper-dragger'),
                 resizer1 = document.querySelector('#pr7'),
                 resizer2 = document.querySelector('#pr6'),
-                
+
 
                 parent = document.querySelector('.parent'),
                 frame = document.querySelector('.frame'),
@@ -497,7 +503,11 @@
                 resizer4 = document.querySelector('#pr4'),
                 resizer5 = document.querySelector('#pr8')
 
+                var rect = parent.getBoundingClientRect();
 
+            var topx = 50, btmx = 50;
+            var i=0;
+ 
             resizer1.style.background = 'red';
             resizer1.style.cursor = 'se-resize';
             resizer1.addEventListener('mousedown', initResize, false);
@@ -520,13 +530,8 @@
 
             function initResize(e) {
 
-                parent.addEventListener('mousemove', Resize, false);
-                resizer1.addEventListener('mouseup', stopResize, false);
-                resizer2.addEventListener('mouseup', stopResize, false);
-                resizer3.addEventListener('mouseup', stopResize, false);
-                resizer4.addEventListener('mouseup', stopResize, false);
-                resizer5.addEventListener('mouseup', stopResize, false);
-
+                document.addEventListener('mousemove', Resize, false);
+                document.addEventListener('mouseup', stopResize, false);
 
 
 
@@ -534,40 +539,59 @@
             function Resize(e) {
                 console.log(e.target.id)
 
-                var rect = parent.getBoundingClientRect();
-                console.log("right" + rect.right)
 
                 if (e.clientX > rect.right || e.clientY > rect.bottom) {
                     return;
                 }
 
                 if (e.target.id == "pr6") {
-                    console.log("hna")
+
+
+                    console.log(e)
+
+
+                    resizable.className = ""
+                    resizable.className = "cropper-dragger"
+
+
+                    resizable.style.top = btmx+"px"
+                   
 
                     resizable.style.height = (e.clientY - rect.top - resizable.offsetTop) + 'px';
                     frame.style.height = resizable.style.height
                     pr4.style.top = (e.clientY - rect.top - resizable.offsetTop) / 2 + 'px'
                     pr8.style.bottom = (e.clientY - rect.top - 20 - resizable.offsetTop) / 2 + 'px'
 
+                    topx = btmx
+                    i=0
+
+                } else if (e.target.id == "pr3") {
+
+                    resizable.className = ""
+                    resizable.className = "reverse-cropper-dragger"
+                    resizable.style.top=""
 
 
-                }else if(e.target.id == "pr3"){
-                    
-                    console.log("resizeaqua problem")
-                    resizable.style.height = (e.clientY - rect.top - resizable.offsetTop) + 'px';
+                    if(i==0){
+                    resizable.style.bottom = rect.height - topx - resizable.offsetHeight+'px'
+                    }
+
+                    resizable.style.height = (e.clientY - rect.top - resizable.offsetTop + resizable.offsetHeight) + 'px';
                     frame.style.height = resizable.style.height
-                    pr4.style.top = (e.clientY - rect.top - resizable.offsetTop) / 2 + 'px'
-                    pr8.style.bottom = (e.clientY - rect.top - 20 - resizable.offsetTop) / 2 + 'px'
 
-                    
+                    btmx = resizable.offsetTop
+                    i++
 
-                }else if(e.target.id == "pr4"){
+                    pr4.style.top = (e.clientY - rect.top+ 10 - resizable.offsetTop + resizable.offsetHeight) / 2 + 'px'
+                    pr8.style.bottom = (e.clientY - rect.top- 20 - resizable.offsetTop + resizable.offsetHeight) / 2 + 'px'
+
+                } else if (e.target.id == "pr4") {
 
                     console.log("resizerornge problem")
 
-                    
+
                 }
-                else if(e.target.id == "pr8"){
+                else if (e.target.id == "pr8") {
 
 
 
@@ -580,8 +604,8 @@
 
 
                 }
-                
-                 else if (e.target.id == "pr7") {
+
+                else if (e.target.id == "pr7") {
                     console.log("la")
 
                     resizable.style.width = (e.clientX - rect.left - resizable.offsetLeft) + 'px';
@@ -607,8 +631,9 @@
             function stopResize(e) {
                 console.log("stop")
 
-                parent.removeEventListener('mousemove', Resize, false);
-                resizer1.removeEventListener('mouseup', stopResize, false);
+                document.removeEventListener('mousemove', Resize, false);
+                document.removeEventListener('mouseup', stopResize, false);
+
             }
 
         </script>
