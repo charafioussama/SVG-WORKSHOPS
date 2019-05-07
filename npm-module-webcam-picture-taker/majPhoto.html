@@ -449,20 +449,11 @@
                     move: function (divid, xpos, ypos) {
                         divid.style.left = xpos + 'px';
                         divid.style.top = ypos + 'px';
-
-                        if(divid.className=="cropper-dragger"){ 
-                            console.log("wewe")
-                            btmx = divid.offsetTop+0.1
-                            console.log(topx)
-                            }else if(divid.className=="reverse-cropper-dragger"){
-                                topx=divid.style.top 
-                                console.log("wowo")
-                            }
-
+                        initMov(divid)  
                     },
                     startMoving: function (divid, container, evt) {
-                        
-                        
+
+
 
                         var style = getComputedStyle(divid);
 
@@ -500,6 +491,7 @@
                         var a = document.createElement('script');
                         document.querySelector('.' + container).style.cursor = 'default';
                         document.onmousemove = function () { }
+                        
                     },
                 }
             }();
@@ -555,12 +547,16 @@
 
             }
 
-            function outputsize() {
-                        //width.value = textbox.offsetWidth
-                        //height.value = textbox.offsetHeight
-                        console.log("oki")
-                    }
-                    outputsize()
+            function initMov(divid) {
+
+                console.log("initMov2")
+
+                    btmx = parseInt(divid.style.top,10) + 0.1
+                    console.log(topx)
+                    i = 0
+                    topx = divid.offsetTop
+                    console.log("afixed" + topx)
+                }            
             function Resize(e) {
                 console.log(e.target.id)
 
@@ -578,10 +574,9 @@
                     resizable.className = ""
                     resizable.className = "cropper-dragger"
 
-
                     resizable.style.top = btmx + "px"
 
-                    console.log("hna"+btmx)
+                    console.log("hna" + btmx)
 
 
                     resizable.style.height = (e.clientY - rect.top - resizable.offsetTop) + 5 + 'px';
@@ -597,11 +592,13 @@
                     resizable.className = ""
                     resizable.className = "reverse-cropper-dragger"
                     resizable.style.top = ""
-
+                    console.log(topx)
 
                     if (i == 0) {
+                        console.log("fixed")
                         resizable.style.bottom = rect.height - topx - resizable.offsetHeight + 'px'
                     }
+
 
                     //resizable.style.height = (e.clientY - rect.top - resizable.offsetTop + resizable.offsetHeight)+ 'px';
 
@@ -610,10 +607,10 @@
                     console.log(e.clientY - rect.top - resizable.offsetTop + resizable.offsetHeight)
 
 
-                    if(e.clientY - rect.top - resizable.offsetTop + resizable.offsetHeight-1>=parseInt(resizable.style.height, 10))
-                    resizable.style.height = parseInt(resizable.style.height, 10)+3+ 'px';
+                    if (e.clientY - rect.top - resizable.offsetTop + resizable.offsetHeight - 1 >= parseInt(resizable.style.height, 10))
+                        resizable.style.height = parseInt(resizable.style.height, 10) + 3 + 'px';
                     else
-                    resizable.style.height = parseInt(resizable.style.height, 10)-3+ 'px';
+                        resizable.style.height = parseInt(resizable.style.height, 10) - 3 + 'px';
 
 
 
@@ -684,10 +681,10 @@
                         resizable.style.bottom = rect.height - topx - resizable.offsetHeight + 'px'
                     }
 
-                    if(e.clientY - rect.top - resizable.offsetTop + resizable.offsetHeight-1>=parseInt(resizable.style.height, 10))
-                    resizable.style.height = parseInt(resizable.style.height, 10) +3+ 'px';
+                    if (e.clientY - rect.top - resizable.offsetTop + resizable.offsetHeight - 1 >= parseInt(resizable.style.height, 10))
+                        resizable.style.height = parseInt(resizable.style.height, 10) + 3 + 'px';
                     else
-                    resizable.style.height = parseInt(resizable.style.height, 10) -3+ 'px';
+                        resizable.style.height = parseInt(resizable.style.height, 10) - 3 + 'px';
 
                     frame.style.height = resizable.style.height
 
