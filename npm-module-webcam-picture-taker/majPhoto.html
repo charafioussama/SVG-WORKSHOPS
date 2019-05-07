@@ -559,9 +559,9 @@
                 }            
             function Resize(e) {
                 console.log(e.target.id)
+                console.log(e.clientY)
 
-
-                if (e.clientX > rect.right || e.clientY > rect.bottom) {
+                if (e.clientX > rect.right-2 || e.clientY+2 > rect.bottom || e.clientY+5 < rect.top || e.clientX < rect.left) {
                     return;
                 }
 
@@ -607,9 +607,9 @@
                     console.log(e.clientY - rect.top - resizable.offsetTop + resizable.offsetHeight)
 
 
-                    if (e.clientY - rect.top - resizable.offsetTop + resizable.offsetHeight - 1 >= parseInt(resizable.style.height, 10))
+                    if (e.clientY - rect.top - resizable.offsetTop + resizable.offsetHeight - 0.5 >= parseInt(resizable.style.height, 10) && e.clientY>rect.top)
                         resizable.style.height = parseInt(resizable.style.height, 10) + 3 + 'px';
-                    else
+                    else 
                         resizable.style.height = parseInt(resizable.style.height, 10) - 3 + 'px';
 
 
@@ -622,30 +622,32 @@
                     btmx = resizable.offsetTop
                     i++
 
-                    pr4.style.top = (e.clientY - rect.top + 10 - resizable.offsetTop + resizable.offsetHeight) / 2 + 'px'
-                    pr8.style.bottom = (e.clientY - rect.top - 20 - resizable.offsetTop + resizable.offsetHeight) / 2 + 'px'
+                    pr4.style.top = parseInt(resizable.style.height, 10) / 2 + 'px'
+                    pr8.style.top = parseInt(resizable.style.height, 10) / 2 + 'px'
+                    console.log("p4"+pr4.style.bottom)
+                    console.log("p4"+pr8.style.bottom)
 
                 } else if (e.target.id == "pr4") {
 
                     console.log("resizerornge problem")
 
-
                 }
                 else if (e.target.id == "pr8") {
-
-
 
                     console.log("resizergray")
 
                     resizable.style.width = (e.clientX - rect.left - resizable.offsetLeft) + 5 + 'px';
                     frame.style.width = resizable.style.width
-                    pr3.style.left = (e.clientX - rect.left - resizable.offsetLeft) / 2 + 'px'
-                    pr6.style.left = (e.clientX - rect.left - resizable.offsetLeft) / 2 + 'px'
+                    pr3.style.left = parseInt(resizable.style.width,10) / 2 + 'px'
+                    pr6.style.left = parseInt(resizable.style.width,10) / 2 + 'px'
 
 
                 }
 
                 else if (e.target.id == "pr7") {
+
+                    console.log("resizerred")
+
 
                     resizable.className = ""
                     resizable.className = "cropper-dragger"
@@ -656,7 +658,7 @@
                     resizable.style.width = (e.clientX - rect.left - resizable.offsetLeft) + 5 + 'px';
                     resizable.style.height = (e.clientY - rect.top - resizable.offsetTop) + 5 + 'px';
 
-                    pr3.style.right = (e.clientX - rect.left - resizable.offsetLeft) / 2 + 'px'
+                    pr3.style.left = (e.clientX - rect.left - resizable.offsetLeft) / 2 + 'px'
                     pr4.style.top = (e.clientY - rect.top - resizable.offsetTop) / 2 + 'px'
                     pr6.style.left = (e.clientX - rect.left - resizable.offsetLeft) / 2 + 'px'
                     pr8.style.bottom = (e.clientY - rect.top - 20 - resizable.offsetTop) / 2 + 'px'
