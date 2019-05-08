@@ -86,14 +86,14 @@
         .cropper-dragger {
             position: absolute;
             display: none;
-            left: 50px;
-            top: 50px;
+            left: 100px;
+            top: 70px;
         }
 
         .reverse-cropper-dragger {
             position: absolute;
-            left: 50px;
-            bottom: 50px;
+            left: 100px;
+            bottom: 70px;
         }
 
         .frame {
@@ -442,7 +442,7 @@
             }
 
 
-            var topx = 50, btmx = 50;
+            var topx = 70, btmx = 70;
 
             var mydragg = function () {
                 return {
@@ -548,18 +548,13 @@
             }
 
             function initMov(divid) {
-
-                console.log("initMov2")
-
                     btmx = parseInt(divid.style.top,10) + 0.1
-                    console.log(topx)
                     i = 0
                     topx = divid.offsetTop
-                    console.log("afixed" + topx)
-                }            
+                }          
+
             function Resize(e) {
-                console.log(e.target.id)
-                console.log(e.clientY)
+
 
                 if (e.clientX > rect.right-2 || e.clientY+2 > rect.bottom || e.clientY+5 < rect.top || e.clientX < rect.left) {
                     return;
@@ -567,22 +562,16 @@
 
                 if (e.target.id == "pr6") {
 
-
-                    console.log(e)
-
-
                     resizable.className = ""
                     resizable.className = "cropper-dragger"
 
                     resizable.style.top = btmx + "px"
 
-                    console.log("hna" + btmx)
-
-
                     resizable.style.height = (e.clientY - rect.top - resizable.offsetTop) + 5 + 'px';
                     frame.style.height = resizable.style.height
+
                     pr4.style.top = (e.clientY - rect.top - resizable.offsetTop) / 2 + 'px'
-                    pr8.style.bottom = (e.clientY - rect.top - 20 - resizable.offsetTop) / 2 + 'px'
+                    pr8.style.top = (e.clientY - rect.top - resizable.offsetTop) / 2 + 'px'
 
                     topx = btmx
                     i = 0
@@ -592,29 +581,15 @@
                     resizable.className = ""
                     resizable.className = "reverse-cropper-dragger"
                     resizable.style.top = ""
-                    console.log(topx)
 
                     if (i == 0) {
-                        console.log("fixed")
                         resizable.style.bottom = rect.height - topx - resizable.offsetHeight + 'px'
                     }
-
-
-                    //resizable.style.height = (e.clientY - rect.top - resizable.offsetTop + resizable.offsetHeight)+ 'px';
-
-                    console.log(resizable.style.height)
-                    console.log(e.clientY)
-                    console.log(e.clientY - rect.top - resizable.offsetTop + resizable.offsetHeight)
-
 
                     if (e.clientY - rect.top - resizable.offsetTop + resizable.offsetHeight - 0.5 >= parseInt(resizable.style.height, 10) && e.clientY>rect.top)
                         resizable.style.height = parseInt(resizable.style.height, 10) + 3 + 'px';
                     else 
                         resizable.style.height = parseInt(resizable.style.height, 10) - 3 + 'px';
-
-
-
-                    //new ResizeObserver(outputsize).observe(resizable)
 
 
                     frame.style.height = resizable.style.height
@@ -624,30 +599,22 @@
 
                     pr4.style.top = parseInt(resizable.style.height, 10) / 2 + 'px'
                     pr8.style.top = parseInt(resizable.style.height, 10) / 2 + 'px'
-                    console.log("p4"+pr4.style.bottom)
-                    console.log("p4"+pr8.style.bottom)
 
                 } else if (e.target.id == "pr4") {
 
-                    console.log("resizerornge problem")
+                    console.log("resizerornge")
 
                 }
                 else if (e.target.id == "pr8") {
-
-                    console.log("resizergray")
 
                     resizable.style.width = (e.clientX - rect.left - resizable.offsetLeft) + 5 + 'px';
                     frame.style.width = resizable.style.width
                     pr3.style.left = parseInt(resizable.style.width,10) / 2 + 'px'
                     pr6.style.left = parseInt(resizable.style.width,10) / 2 + 'px'
 
-
                 }
 
                 else if (e.target.id == "pr7") {
-
-                    console.log("resizerred")
-
 
                     resizable.className = ""
                     resizable.className = "cropper-dragger"
@@ -661,7 +628,7 @@
                     pr3.style.left = (e.clientX - rect.left - resizable.offsetLeft) / 2 + 'px'
                     pr4.style.top = (e.clientY - rect.top - resizable.offsetTop) / 2 + 'px'
                     pr6.style.left = (e.clientX - rect.left - resizable.offsetLeft) / 2 + 'px'
-                    pr8.style.bottom = (e.clientY - rect.top - 20 - resizable.offsetTop) / 2 + 'px'
+                    pr8.style.top = (e.clientY - rect.top - resizable.offsetTop) / 2 + 'px'
 
                     frame.style.width = resizable.style.width
                     frame.style.height = resizable.style.height
@@ -691,38 +658,28 @@
                     frame.style.height = resizable.style.height
 
 
-                    console.log(resizable.style.width)
-
-
-                    console.log(e.clientX)
-                    console.log(rect.left)
-                    console.log(resizable.offsetLeft)
-
-
                     if (etat < e.clientX) {
-                        console.log("kayno")
-
                         resizable.style.width = parseInt(resizable.style.width, 10) + 3 + 'px';
                     } else if (etat > e.clientX) {
-                        console.log("kayna")
                         resizable.style.width = parseInt(resizable.style.width, 10) - 3 + 'px';
                     }
                     frame.style.width = resizable.style.width
-
-                    console.log(frame.style.width)
-
-
-                    console.log(parseInt(frame.style.width, 10))
-
 
                     etat = e.clientX
                     btmx = resizable.offsetTop
                     i++
 
-                    pr4.style.top = (e.clientY - rect.top + 10 - resizable.offsetTop + resizable.offsetHeight) / 2 + 'px'
+                    
+
+                    pr4.style.top = parseInt(resizable.style.width, 10) / 2 + 'px'
+
+                    console.log("btm1"+pr4.style.bottom)
+
                     pr3.style.left = (e.clientX - rect.left - resizable.offsetLeft) / 2 + 'px'
                     pr6.style.left = (e.clientX - rect.left - resizable.offsetLeft) / 2 + 'px'
-                    pr8.style.bottom = (e.clientY - rect.top - 20 - resizable.offsetTop + resizable.offsetHeight) / 2 + 'px'
+                    pr8.style.bottom =(parseInt(resizable.style.width, 10)-20) / 2 + 'px'
+
+                    console.log("btm2"+pr8.style.bottom)
 
                 }
 
@@ -731,8 +688,6 @@
 
             }
             function stopResize(e) {
-                console.log("stop")
-
                 document.removeEventListener('mousemove', Resize, false);
                 document.removeEventListener('mouseup', stopResize, false);
 
