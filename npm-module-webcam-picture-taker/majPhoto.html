@@ -142,7 +142,7 @@
                                 <canvas id="c1" style="border:1px black solid;"></canvas>
                             </div>
 
-                            <div class="cropper-dragger" style="width: 130px;height: 130px;">
+                            <div class="cropper-dragger" style="width: 130px;height: 130px;" id="cropper">
 
                                 <div class="frame" onmousedown='mydragg.startMoving(this.parentNode,"parent",event);'
                                     onmouseup='mydragg.stopMoving("parent");'>
@@ -202,6 +202,8 @@
                     this.h = this.canvas.height = document.querySelector('.parent').offsetHeight
                     this.video.addEventListener('play', _ => this.copy())
                     this.startCamera()
+                    this.container = document.querySelector('.parent')
+                    this.resizable = document.querySelector('#cropper')
 
                 },
                 copy() {
@@ -223,6 +225,8 @@
                 process() {
                     const imageData = this.ctx.getImageData(0, 0, this.w, this.h)
                     applyFilter(this.ctx)
+
+                    applyOpacity(this.resizable)
 
                     /*
                     for (let i = 0; i < d.length; i += 4) {
@@ -288,8 +292,32 @@
                 }, 1000);
             }
 
+
+            function applyOpacity(resizable) {
+
+                resizable.style.background = "rgba(0,0,0,0.1)";
+
+
+            }
+
+
+            function crop(canvas, offsetX, offsetY, width, height) {
+                var buffer = document.createElement('canvas');
+                var b_ctx = buffer.getContext('2d');
+
+                buffer.width = width;
+                buffer.height = height;
+
+                b_ctx.drawImage(canvas, offsetX, offsetY, width, height,
+                    0, 0, buffer.width, buffer.height);
+                return buffer.toDataURL("image/png");
+            }
+
             function saveImageProfil() {
-                let imgData = vlib.canvas.toDataURL("image/png");
+
+                console.log("called")
+
+                let imgData = crop(vlib.canvas,vlib.resizable.offsetLeft,vlib.resizable.offsetTop,vlib.resizable.offsetWidth,vlib.resizable.offsetHeight);
                 localStorage.setItem("imgData", imgData.replace(/^data:image\/(png|jpg);base64,/, ""));
                 window.location = "profile.html";
             }
@@ -449,7 +477,7 @@
                     move: function (divid, xpos, ypos) {
                         divid.style.left = xpos + 'px';
                         divid.style.top = ypos + 'px';
-                        initMov(divid)  
+                        initMov(divid)
                     },
                     startMoving: function (divid, container, evt) {
 
@@ -491,7 +519,7 @@
                         var a = document.createElement('script');
                         document.querySelector('.' + container).style.cursor = 'default';
                         document.onmousemove = function () { }
-                        
+
                     },
                 }
             }();
@@ -548,15 +576,15 @@
             }
 
             function initMov(divid) {
-                    btmx = parseInt(divid.style.top,10) + 0.1
-                    i = 0
-                    topx = divid.offsetTop
-                }          
+                btmx = parseInt(divid.style.top, 10) + 0.1
+                i = 0
+                topx = divid.offsetTop
+            }
 
             function Resize(e) {
 
 
-                if (e.clientX > rect.right-2 || e.clientY+2 > rect.bottom || e.clientY+5 < rect.top || e.clientX < rect.left) {
+                if (e.clientX > rect.right - 2 || e.clientY + 2 > rect.bottom || e.clientY + 5 < rect.top || e.clientX < rect.left) {
                     return;
                 }
 
@@ -586,9 +614,9 @@
                         resizable.style.bottom = rect.height - topx - resizable.offsetHeight + 'px'
                     }
 
-                    if (e.clientY - rect.top - resizable.offsetTop + resizable.offsetHeight - 0.5 >= parseInt(resizable.style.height, 10) && e.clientY>rect.top)
+                    if (e.clientY - rect.top - resizable.offsetTop + resizable.offsetHeight - 0.5 >= parseInt(resizable.style.height, 10) && e.clientY > rect.top)
                         resizable.style.height = parseInt(resizable.style.height, 10) + 3 + 'px';
-                    else 
+                    else
                         resizable.style.height = parseInt(resizable.style.height, 10) - 3 + 'px';
 
 
@@ -609,8 +637,8 @@
 
                     resizable.style.width = (e.clientX - rect.left - resizable.offsetLeft) + 5 + 'px';
                     frame.style.width = resizable.style.width
-                    pr3.style.left = parseInt(resizable.style.width,10) / 2 + 'px'
-                    pr6.style.left = parseInt(resizable.style.width,10) / 2 + 'px'
+                    pr3.style.left = parseInt(resizable.style.width, 10) / 2 + 'px'
+                    pr6.style.left = parseInt(resizable.style.width, 10) / 2 + 'px'
 
                 }
 
@@ -669,17 +697,17 @@
                     btmx = resizable.offsetTop
                     i++
 
-                    
+
 
                     pr4.style.top = parseInt(resizable.style.width, 10) / 2 + 'px'
 
-                    console.log("btm1"+pr4.style.bottom)
+                    console.log("btm1" + pr4.style.bottom)
 
                     pr3.style.left = (e.clientX - rect.left - resizable.offsetLeft) / 2 + 'px'
                     pr6.style.left = (e.clientX - rect.left - resizable.offsetLeft) / 2 + 'px'
-                    pr8.style.bottom =(parseInt(resizable.style.width, 10)-20) / 2 + 'px'
+                    pr8.style.bottom = (parseInt(resizable.style.width, 10) - 20) / 2 + 'px'
 
-                    console.log("btm2"+pr8.style.bottom)
+                    console.log("btm2" + pr8.style.bottom)
 
                 }
 
