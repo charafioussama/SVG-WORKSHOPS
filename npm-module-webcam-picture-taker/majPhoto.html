@@ -99,7 +99,7 @@
         .frame {
             width: 130px;
             height: 130px;
-            border: 2px solid black;
+            border: 2px solid antiquewhite;
             position: absolute;
 
         }
@@ -108,7 +108,7 @@
             position: absolute;
             width: 10px;
             height: 10px;
-            background-color: black;
+            background-color: antiquewhite;
             padding: 5px;
         }
     </style>
@@ -119,24 +119,24 @@
 
     <div class="row">
         <div class="container">
-            <div class="col-md-10  col-md-offset-2">
+            <div class="col-md-10  col-md-offset-1">
                 <div class="card">
 
                     <div class="row">
 
-                        <div class="col-md-6">
-                            <video id="v2" width="330" height="250" autoplay="true">
+                        <div class="col-md-6" style="width:350px;margin-left:110px;margin-right:80px;padding: 0;">
+                            <video id="v2" width="340" height="255" autoplay loop>
                                 <source>
                                 </source>
                             </video>
-                            <div id="edit" style="display: none;padding: 5px;">
+                            <div id="editPanel" style="display: none;padding-left:20px;">
                                 <input type="range" id="contrast" min="0" max="100" value="100">
                                 <input type="range" id="hue" min="0" max="360" value="0">
                                 <input type="range" id="saturation" min="0" max="200" value="100">
                                 <input type="range" id="lightness" min="0" max="200" value="100">
                             </div>
                         </div>
-                        <div class="col-md-6 parent" style="width: 330px;height: 250px;padding :0;">
+                        <div class="col-md-6 parent" style="width: 330px;height: 250px;padding :0;  ">
 
                             <div>
                                 <canvas id="c1" style="border:1px black solid;"></canvas>
@@ -164,21 +164,21 @@
 
 
                     </div>
-                    <div class="row">
+                    <div class="row" style="background-color: beige;">
 
                         <div class="card-body text-center">
 
                             <h4 class="card-title">CHARAFI Oussama</h4>
                             <p class="card-text text-muted">UI/UX Designer</p>
-                            <p class="mt-4"><a href="#" class="btn btn-primary" onclick="startCounting(this)"><i
-                                        class="glyphicon glyphicon-camera"></i> Capturer</a>
+                            <p class="mt-4"><a href="#" class="btn btn-primary" disabled="disabled" id="capture"
+                                    onclick=""><i class="glyphicon glyphicon-camera"></i> Capturer</a>
 
-                                <a href="#" class="btn btn-primary" onclick="saveImageProfil()"><i
+                                <a href="#" class="btn btn-primary" onclick="" disabled="disabled" id="saver"><i
                                         class="glyphicon glyphicon-save"></i> Save</a>
-                                <a href="#" class="btn btn-primary" onclick="showEditDiv()"><i
+                                <a href="#" class="btn btn-primary" disabled="disabled" id="update" onclick=""><i
                                         class="glyphicon glyphicon-edit"></i> Edit</a>
-                                <a href="#" class="btn btn-primary" onclick="showCropper()"><i
-                                        class="glyphic  on glyphicon-resize-small"></i> Crop</a>
+                                <a href="#" class="btn btn-primary" disabled="disabled" id="crop" onclick=""><i
+                                        class="glyphicon glyphicon-resize-small"></i> Crop</a>
                             </p>
                             <span class="compt"> </span>
                         </div>
@@ -204,9 +204,14 @@
                     this.startCamera()
                     this.container = document.querySelector('.parent')
                     this.resizable = document.querySelector('#cropper')
+                    this.saver = document.querySelector('#saver')
+                    this.capture = document.querySelector('#capture')
+                    this.editer = document.querySelector('#update')
+                    this.crop = document.querySelector('#crop')
 
                 },
                 copy() {
+
                     this.ctx.drawImage(this.video, 0, 0, this.w, this.h)
                     this.process()
                     if (this.video.ended || this.video.paused)
@@ -220,6 +225,9 @@
 
                     this.ctx.drawImage(this.video, 0, 0, this.w, this.h)
                     applyFilterSt(this.video)
+
+                    this.saver.onclick = function () { saveImageProfil() }
+                    this.saver.removeAttribute('disabled');
 
                 },
                 process() {
@@ -249,19 +257,33 @@
                     try {
                         stream = await navigator.mediaDevices.getUserMedia({ video: true })
                         this.video2.srcObject = stream
-
+                        enableBtns()
 
 
                     } catch (error) {
                         console.log("something was wrong")
                         videoReplace = document.querySelector('#v2')
                         videoReplace.src = "Big_Buck_Bunny_Trailer.mp4"
+                        enableBtns()
                     }
                 }
             }
             vlib.init()
 
+            function enableBtns() {
+
+                vlib.capture.removeAttribute('disabled');
+                vlib.editer.removeAttribute('disabled');
+                vlib.crop.removeAttribute('disabled');
+
+                vlib.capture.onclick = function () { startCounting(this) }
+                vlib.editer.onclick = function () { showEditDiv() }
+                vlib.crop.onclick = function () { showCropper() }
+            }
+
             function startCounting(link) {
+
+                console.log("called")
 
                 this.captured = false
                 spanChrono = document.querySelector('.compt')
@@ -315,19 +337,24 @@
 
             function saveImageProfil() {
 
-                console.log("called")
+                let state = vlib.resizable.style.display;
+                let imgData
 
-                let imgData = crop(vlib.canvas,vlib.resizable.offsetLeft,vlib.resizable.offsetTop,vlib.resizable.offsetWidth,vlib.resizable.offsetHeight);
+                if (state == "block")
+                    imgData = crop(vlib.canvas, vlib.resizable.offsetLeft, vlib.resizable.offsetTop, vlib.resizable.offsetWidth, vlib.resizable.offsetHeight);
+                else
+                    imgData = vlib.canvas.toDataURL("image/png");
+
                 localStorage.setItem("imgData", imgData.replace(/^data:image\/(png|jpg);base64,/, ""));
                 window.location = "profile.html";
             }
 
             function showEditDiv() {
-                let state = document.getElementById('edit').style.display;
+                let state = document.getElementById('editPanel').style.display;
                 if (state == "block")
-                    document.getElementById('edit').style.display = "none";
+                    document.getElementById('editPanel').style.display = "none";
                 else
-                    document.getElementById('edit').style.display = "block";
+                    document.getElementById('editPanel').style.display = "block";
 
             }
 
@@ -450,11 +477,8 @@
             
                     function calc() {
             
-            
-            
                     }
             */
-
 
             function showCropper() {
 
@@ -465,10 +489,7 @@
                     document.querySelector('.col-md-6 .cropper-dragger').style.display = "block";
                     console.log(state)
                 }
-
-
             }
-
 
             var topx = 70, btmx = 70;
 
@@ -537,32 +558,27 @@
                 resizer5 = document.querySelector('#pr8')
             resizer6 = document.querySelector('#pr1')
 
+
             var rect = parent.getBoundingClientRect();
 
             var i = 0;
             var etat = 0;
 
-            resizer1.style.background = 'red';
             resizer1.style.cursor = 'se-resize';
             resizer1.addEventListener('mousedown', initResize, false);
 
-            resizer2.style.background = 'blue';
             resizer2.style.cursor = 'n-resize';
             resizer2.addEventListener('mousedown', initResize, false);
 
-            resizer3.style.background = 'aqua';
             resizer3.style.cursor = 'n-resize';
             resizer3.addEventListener('mousedown', initResize, false);
 
-            resizer4.style.background = 'orange';
             resizer4.style.cursor = 'ew-resize';
             resizer4.addEventListener('mousedown', initResize, false);
 
-            resizer5.style.background = 'gray';
             resizer5.style.cursor = 'ew-resize';
             resizer5.addEventListener('mousedown', initResize, false);
 
-            resizer6.style.background = 'BlueViolet ';
             resizer6.style.cursor = 'sw-resize';
             resizer6.addEventListener('mousedown', initResize, false);
 
@@ -570,8 +586,6 @@
 
                 document.addEventListener('mousemove', Resize, false);
                 document.addEventListener('mouseup', stopResize, false);
-
-
 
             }
 
