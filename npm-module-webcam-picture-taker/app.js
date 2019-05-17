@@ -3,39 +3,42 @@
 const vlib = {
     FPS: 30,
     captured: false,
-    topx:70,
-    btmx:70,
-    i:0,
-    etat:0,
-    canvas:"",
-    video:"",
-    ctx:"",
-    w:0,
-    h:0,
-    container:"",
-    resizable:"",
-    saver:"",
-    capture:"",
-    editer:"",
-    crop:"",
-    vi:"",
-    rng1:"",
-    rng2:"",
-    rng3:"",
-    rng4:"",
-    resizer1:"",
-    resizer2:"",
-    resizer3:"",
-    resizer4:"",
-    resizer5:"",
-    resizer6:"",
-    parent:"",
-    frame:"",
-    rect:"",
-    contr:"",
-    hu:"",
-    sat:"",
-    ligh:"",
+    topx: 70,
+    btmx: 70,
+    rightx: 100,
+    leftx: 100,
+    i: 0,
+    j: 0,
+    etat: 0,
+    canvas: "",
+    video: "",
+    ctx: "",
+    w: 0,
+    h: 0,
+    container: "",
+    resizable: "",
+    saver: "",
+    capture: "",
+    editer: "",
+    crop: "",
+    vi: "",
+    rng1: "",
+    rng2: "",
+    rng3: "",
+    rng4: "",
+    resizer1: "",
+    resizer2: "",
+    resizer3: "",
+    resizer4: "",
+    resizer5: "",
+    resizer6: "",
+    parent: "",
+    frame: "",
+    rect: "",
+    contr: "",
+    hu: "",
+    sat: "",
+    ligh: "",
     init() {
         canvas = document.querySelector('#c1')
         video = document.querySelector('#v2')
@@ -52,42 +55,55 @@ const vlib = {
         crop = document.querySelector('#crop')
         vi = document.querySelector('#v2')
         rng1 = document.querySelector("#contrast"),
-        rng2 = document.querySelector("#hue"),
-        rng3 = document.querySelector("#saturation"),
-        rng4 = document.querySelector("#lightness"),
+            rng2 = document.querySelector("#hue"),
+            rng3 = document.querySelector("#saturation"),
+            rng4 = document.querySelector("#lightness"),
 
-        //resizable = document.querySelector('.cropper-dragger'),
-        resizer1 = document.querySelector('#pr7'),
-        resizer2 = document.querySelector('#pr6'),
-        parent = document.querySelector('.parent'),
-        frame = document.querySelector('.frame'),
-        resizer3 = document.querySelector('#pr3'),
-        resizer4 = document.querySelector('#pr4'),
-        resizer5 = document.querySelector('#pr8')
+            //resizable = document.querySelector('.cropper-dragger'),
+            resizer1 = document.querySelector('#pr7'),
+            resizer2 = document.querySelector('#pr6'),
+            parent = document.querySelector('.parent'),
+            frame = document.querySelector('.frame'),
+            resizer3 = document.querySelector('#pr3'),
+            resizer4 = document.querySelector('#pr4'),
+            resizer5 = document.querySelector('#pr8')
         resizer6 = document.querySelector('#pr1')
-          
+        resizer7 = document.querySelector('#pr2')
+        resizer8 = document.querySelector('#pr5')
+
+
         rect = parent.getBoundingClientRect()
-        
+
+
+        resizer4.style.background = 'green'
+
         resizer1.style.cursor = 'se-resize'
         resizer1.addEventListener('mousedown', this.initResize, false)
-        
+
         resizer2.style.cursor = 'n-resize'
         resizer2.addEventListener('mousedown', this.initResize, false)
-        
+
         resizer3.style.cursor = 'n-resize'
         resizer3.addEventListener('mousedown', this.initResize, false)
-        
+
         resizer4.style.cursor = 'ew-resize'
         resizer4.addEventListener('mousedown', this.initResize, false)
-        
+
         resizer5.style.cursor = 'ew-resize'
         resizer5.addEventListener('mousedown', this.initResize, false)
-        
+
         resizer6.style.cursor = 'sw-resize'
         resizer6.addEventListener('mousedown', this.initResize, false)
+
+        resizer7.style.cursor = 'nw-resize'
+        resizer7.addEventListener('mousedown', this.initResize, false)
+
+        resizer8.style.cursor = 'sw-resize'
+        resizer8.addEventListener('mousedown', this.initResize, false)
+
         contr = rng1.value
         hu = rng2.value
-        sat = rng3.value 
+        sat = rng3.value
         ligh = rng4.value
         //var contr = rng1.value, hu = rng2.value, sat = rng3.value, ligh = rng4.value
 
@@ -264,6 +280,10 @@ const vlib = {
         this.btmx = parseInt(divid.style.top, 10) + 0.1
         this.i = 0
         this.topx = divid.offsetTop
+        this.leftx = divid.offsetLeft
+        this.rightx = divid.offsetLeft
+
+        vlib.j = 0
     },
     Resize(e) {
 
@@ -271,22 +291,28 @@ const vlib = {
             return
         }
 
-        if (e.target.id == "pr6") {
+        resizer7.style.background = "red"
+        resizer8.style.background = "blue"
 
+
+        if (e.target.id == "pr6") {
 
             resizable.className = ""
             resizable.className = "cropper-dragger"
+            console.log("ok6")
 
-            resizable.style.top = this.btmx + "px"
+            resizable.style.top = vlib.btmx + "px"
 
-            resizable.style.height = (e.clientY - rect.top -resizable.offsetTop) + 5 + 'px'
+            resizable.style.left = vlib.leftx + 'px'
+
+            resizable.style.height = (e.clientY - rect.top - resizable.offsetTop) + 5 + 'px'
             frame.style.height = resizable.style.height
 
             pr4.style.top = (e.clientY - rect.top - resizable.offsetTop) / 2 + 'px'
             pr8.style.bottom = (e.clientY - rect.top - resizable.offsetTop) / 2 + 'px'
 
             topx = this.btmx
-            i = 0
+            vlib.i = 0
 
         } else if (e.target.id == "pr3") {
 
@@ -294,37 +320,78 @@ const vlib = {
             resizable.className = "reverse-cropper-dragger"
             resizable.style.top = ""
 
+            console.log("ok3")
 
             if (vlib.i == 0) {
                 resizable.style.bottom = rect.height - vlib.topx - resizable.offsetHeight + 'px'
             }
 
             if (e.clientY - rect.top - resizable.offsetTop + resizable.offsetHeight - 0.5 >= parseInt(resizable.style.height, 10) && e.clientY > rect.top)
-            resizable.style.height = parseInt(resizable.style.height, 10) + 3 + 'px'
+                resizable.style.height = parseInt(resizable.style.height, 10) + 3 + 'px'
             else
-            resizable.style.height = parseInt(resizable.style.height, 10) - 3 + 'px'
+                resizable.style.height = parseInt(resizable.style.height, 10) - 3 + 'px'
 
 
             frame.style.height = resizable.style.height
 
-            btmx = resizable.offsetTop
+            vlib.btmx = resizable.offsetTop
+            vlib.topx = resizable.offsetTop
+
             vlib.i++
 
             pr4.style.top = parseInt(resizable.style.height, 10) / 2 + 'px'
             pr8.style.top = parseInt(resizable.style.height, 10) / 2 + 'px'
 
+            vlib.j = 0
+
+
         } else if (e.target.id == "pr4") {
 
-            console.log("resizerornge")
+            resizable.className = ""
+            resizable.className = "reverse-cropper-dragger"
+            resizable.style.left = ""
+
+
+
+            if (vlib.j == 0) {
+                resizable.style.right = rect.width - vlib.rightx - resizable.offsetWidth + 'px'
+                resizable.style.bottom = rect.height - vlib.topx - resizable.offsetHeight + 'px'
+            }
+
+
+            if (e.clientX - rect.left - resizable.offsetLeft + resizable.offsetWidth - 0.5 >= parseInt(resizable.style.width, 10) && e.clientX > rect.left)
+                resizable.style.width = parseInt(resizable.style.width, 10) + 5 + 'px'
+            else
+                resizable.style.width = parseInt(resizable.style.width, 10) - 5 + 'px'
+
+
+            frame.style.width = resizable.style.width
+            pr3.style.left = parseInt(resizable.style.width, 10) / 2 + 'px'
+            pr6.style.left = parseInt(resizable.style.width, 10) / 2 + 'px'
+            vlib.j++
+            vlib.leftx = resizable.offsetLeft
 
         }
         else if (e.target.id == "pr8") {
 
-            resizable.style.width = (e.clientX - rect.left - resizable.offsetLeft) + 5 + 'px'
+            resizable.className = ""
+            resizable.className = "cropper-dragger"
+
+            console.log("ok8")
+
+
+            resizable.style.width = (e.clientX - rect.left - vlib.leftx) + 5 + 'px'
+
+            console.log(vlib.leftx)
+            resizable.style.left = vlib.leftx + 'px'
+            resizable.style.top = vlib.topx + 'px'
+
             frame.style.width = resizable.style.width
             pr3.style.left = parseInt(resizable.style.width, 10) / 2 + 'px'
             pr6.style.left = parseInt(resizable.style.width, 10) / 2 + 'px'
 
+            vlib.rightx = resizable.offsetLeft
+            vlib.j = 0
         }
 
         else if (e.target.id == "pr7") {
@@ -332,7 +399,15 @@ const vlib = {
             resizable.className = ""
             resizable.className = "cropper-dragger"
 
-            resizable.style.top = this.btmx + "px"
+            console.log("ok7")
+            console.log(vlib.topx)
+
+
+
+            resizable.style.top = vlib.topx + "px"
+            resizable.style.left = vlib.leftx + "px"
+
+            console.log(resizable.style.top)
 
             resizable.style.width = (e.clientX - rect.left - resizable.offsetLeft) + 5 + 'px'
             resizable.style.height = (e.clientY - rect.top - resizable.offsetTop) + 5 + 'px'
@@ -345,9 +420,11 @@ const vlib = {
             frame.style.width = resizable.style.width
             frame.style.height = resizable.style.height
 
-            topx = this.btmx
-            i = 0
-
+            vlib.topx = resizable.offsetTop
+            vlib.rightx = resizable.offsetLeft
+            console.log(vlib.leftx)
+            vlib.i = 0
+            vlib.j = 0
         }
 
 
@@ -356,37 +433,110 @@ const vlib = {
             resizable.className = ""
             resizable.className = "reverse-cropper-dragger"
             resizable.style.top = ""
+            resizable.style.left = vlib.leftx + 'px'
 
+            console.log(resizable)
 
-            if ( vlib.i == 0) {
-                resizable.style.bottom =  rect.height -  vlib.topx -  resizable.offsetHeight + 'px'
+            if (vlib.i == 0) {
+                resizable.style.bottom = rect.height - vlib.topx - resizable.offsetHeight + 'px'
             }
 
-            if (e.clientY - rect.top -  resizable.offsetTop + resizable.offsetHeight - 1 >= parseInt( resizable.style.height, 10))
-            resizable.style.height = parseInt( resizable.style.height, 10) + 3 + 'px'
+            if (e.clientY - rect.top - resizable.offsetTop + resizable.offsetHeight - 1 >= parseInt(resizable.style.height, 10))
+                resizable.style.height = parseInt(resizable.style.height, 10) + 3 + 'px'
             else
-            resizable.style.height = parseInt( resizable.style.height, 10) - 3 + 'px'
+                resizable.style.height = parseInt(resizable.style.height, 10) - 3 + 'px'
 
-            frame.style.height =  resizable.style.height
+            frame.style.height = resizable.style.height
 
 
-            if ( this.etat < e.clientX) {
-                resizable.style.width = parseInt( resizable.style.width, 10) + 3 + 'px'
-            } else if ( this.etat > e.clientX) {
-                resizable.style.width = parseInt( resizable.style.width, 10) - 3 + 'px'
+            if (this.etat < e.clientX) {
+                resizable.style.width = parseInt(resizable.style.width, 10) + 3 + 'px'
+            } else if (this.etat > e.clientX) {
+                resizable.style.width = parseInt(resizable.style.width, 10) - 3 + 'px'
             }
-            frame.style.width =  resizable.style.width
+            frame.style.width = resizable.style.width
 
             this.etat = e.clientX
-            btmx = resizable.offsetTop
+            vlib.btmx = resizable.offsetTop
+            vlib.topx = resizable.offsetTop
+
             vlib.i++
 
 
-            pr4.style.top = parseInt( resizable.style.height, 10) / 2 + 'px'
-            pr3.style.left = (e.clientX -  rect.left -  resizable.offsetLeft) / 2 + 'px'
-            pr6.style.left = (e.clientX -  rect.left -  resizable.offsetLeft) / 2 + 'px'
-            pr8.style.bottom = ((parseInt( resizable.style.height, 10)-20) / 2) + 'px'
+            pr4.style.top = parseInt(resizable.style.height, 10) / 2 + 'px'
+            pr3.style.left = (e.clientX - rect.left - resizable.offsetLeft) / 2 + 'px'
+            pr6.style.left = (e.clientX - rect.left - resizable.offsetLeft) / 2 + 'px'
+            pr8.style.bottom = ((parseInt(resizable.style.height, 10) - 20) / 2) + 'px'
 
+        }
+
+        else if (e.target.id == "pr2") {
+
+            resizable.className = ""
+            resizable.className = "reverse-cropper-dragger"
+            resizable.style.left = ""
+
+            if (vlib.j == 0) {
+                resizable.style.right = rect.width - vlib.rightx - resizable.offsetWidth + 'px'
+                resizable.style.bottom = rect.height - vlib.topx - resizable.offsetHeight + 'px'
+            }
+
+
+            if (e.clientX - rect.left - resizable.offsetLeft + resizable.offsetWidth - 0.5 >= parseInt(resizable.style.width, 10) && e.clientX > rect.left){
+                resizable.style.width = parseInt(resizable.style.width, 10) + 5 + 'px'
+                resizable.style.height = parseInt(resizable.style.height, 10) + 5 + 'px'
+            }else{
+                resizable.style.width = parseInt(resizable.style.width, 10) - 5 + 'px'
+                resizable.style.height = parseInt(resizable.style.height, 10) - 5 + 'px'
+
+            }
+
+            frame.style.width = resizable.style.width
+            frame.style.height = resizable.style.height
+
+            pr3.style.left = parseInt(resizable.style.width, 10) / 2 + 'px'
+            pr6.style.left = parseInt(resizable.style.width, 10) / 2 + 'px'
+            vlib.j++
+            vlib.leftx = resizable.offsetLeft
+            vlib.topx = resizable.offsetTop
+
+            vlib.i=0
+        }
+        else if (e.target.id == "pr5") {
+
+            resizable.className = ""
+            resizable.className = "reverse-cropper-dragger"
+            resizable.style.left = ""
+            resizable.style.bottom = ""
+
+
+            if (vlib.j == 0) {
+                resizable.style.right = rect.width - vlib.rightx - resizable.offsetWidth + 'px'
+                resizable.style.top = vlib.topx + 'px'
+            }
+
+
+            if (e.clientX - rect.left - resizable.offsetLeft + resizable.offsetWidth - 0.5 >= parseInt(resizable.style.width, 10) && e.clientX > rect.left){
+                resizable.style.width = parseInt(resizable.style.width, 10) + 5 + 'px'
+                resizable.style.height = parseInt(resizable.style.height, 10) + 5 + 'px'
+            }else{
+                resizable.style.width = parseInt(resizable.style.width, 10) - 5 + 'px'
+                resizable.style.height = parseInt(resizable.style.height, 10) - 5 + 'px'
+
+            }
+
+            frame.style.width = resizable.style.width
+            frame.style.height = resizable.style.height
+
+            pr3.style.left = parseInt(resizable.style.width, 10) / 2 + 'px'
+            pr6.style.left = parseInt(resizable.style.width, 10) / 2 + 'px'
+            vlib.j++
+            vlib.leftx = resizable.offsetLeft
+            vlib.topx = resizable.offsetTop
+
+            console.log(vlib.topx)
+
+            vlib.i=0
         }
 
     },
@@ -463,8 +613,8 @@ vlib.init()
                 d[i + 1] = d[i + 1] * contrast + intercept;
                 d[i + 2] = d[i + 2] * contrast + intercept;
             }
- 
- 
+
+
         }
         */
 
@@ -473,7 +623,7 @@ vlib.init()
 
 /*
         var operations = {
- 
+
             rgbToHsl: function (r, g, b) {
                 r /= 255, g /= 255, b /= 255;
                 var max = Math.max(r, g, b), min = Math.min(r, g, b);
@@ -535,14 +685,14 @@ vlib.init()
                 g += m;
                 b += m;
                 return ({ r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) });
- 
- 
+
+
             }
         };
- 
- 
+
+
         function calc() {
- 
+
         }
 */
 

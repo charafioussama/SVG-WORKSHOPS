@@ -78,7 +78,7 @@ body {
 }
 .reverse-cropper-dragger {
     position: absolute;
-    left: 100px;
+    right: 100px;
     bottom: 70px;
 }
 
