@@ -1,15 +1,25 @@
-# Exercices of session4
+# WORKSHOP OF SESSION 4
 
 
-Developped CHARAFI Oussama
+Developed by CHARAFI Oussama
 
-Engeneer student
+Engineering student
 
 
 ## Builts With
 
 * SVG
 * Vanilla JS
+
+## Screenshot
+### EXERCICE 1
+![Alt text](https://i.ibb.co/GT4NgHd/s4-exo1.jpg)
+
+### EXERCICE 2
+![Alt text](https://i.ibb.co/h1BcFT1/s4-exo2.jpg)
+
+### EXERCICE 3
+![Alt text](https://i.ibb.co/c60Tt6D/s4-exo3.jpg)
 
 Made by CHARAFI Oussama - 2019
 
