@@ -1,15 +1,25 @@
-# Exercices of session3
+# WORKSHOP OF SESSION 3
 
 
-Developped CHARAFI Oussama
+Developped by CHARAFI Oussama
 
-Engeneer student
+Engineering student
 
 
 ## Builts With
 
 * Canvas
 * Vanilla JS
+
+## Screenshot
+### EXERCICE 1
+![Alt text](https://i.ibb.co/NW2TQFf/s3-exo1.jpg)
+
+### EXERCICE 2
+![Alt text](https://i.ibb.co/MGP9vNq/s3-exo2.jpg)
+
+### EXERCICE 3
+![Alt text](https://i.ibb.co/ys57zQS/s3-exo3.jpg)
 
 Made by CHARAFI Oussama - 2019
 
