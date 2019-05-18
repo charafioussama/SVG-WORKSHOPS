@@ -1,7 +1,7 @@
 # WORKSHOP OF SESSION 1
 
 
-Developped by CHARAFI Oussama
+Developed by CHARAFI Oussama
 
 Engineering student
 
