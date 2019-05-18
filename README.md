@@ -11,10 +11,10 @@ This repo contains some workshops about multimedia, & a npm project of webcam ca
 * Canvas
 
 # Author
-CHARAFI Oussama => Engineering student
+* CHARAFI Oussama, Engineering student
 
 # Teacher
-M.Daaif Aziz
+* M.Daaif Aziz
 
 Made by CHARAFI Oussama - 2019
 
