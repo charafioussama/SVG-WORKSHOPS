@@ -19,7 +19,7 @@ Engineering student
 ![Alt text](https://i.ibb.co/h1BcFT1/s4-exo2.jpg)
 
 ### EXERCICE 3
-![Alt text](https://i.ibb.co/c60Tt6D/s4-exo3.jpg)
+![Alt text](https://i.ibb.co/QXM7Bf0/1.jpg)
 
 Made by CHARAFI Oussama - 2019
 
