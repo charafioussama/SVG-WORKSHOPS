@@ -33,7 +33,7 @@ This module provides some very simple functions to simplify capturing images, ad
 
 ### PROFIL PAGE
 
-![Alt text](https://i.ibb.co/FxxFbXF/projet1.jpg)
+![Alt text](https://i.ibb.co/hgwtfLq/2.jpg)
 
 ### PRINCIPAL PAGE
 
@@ -41,23 +41,23 @@ This module provides some very simple functions to simplify capturing images, ad
 
 ### PRINCIPAL PAGE 2
 
-![Alt text](https://i.ibb.co/Qr3LqGr/projet3.jpg)
+![Alt text](https://i.ibb.co/Fx6Z3Q8/3.jpg)
 
 ### EDITING FILTERS
 
-![Alt text](https://i.ibb.co/Kwzs219/projet4.jpg)
+![Alt text](https://i.ibb.co/CVTwM1L/4.jpg)
 
 ### STOPWACH FOR CAPTURING
 
-![Alt text](https://i.ibb.co/Nst0f6q/projet5.jpg)
+![Alt text](https://i.ibb.co/Cv4gr2f/5.jpg)
 
 ### CROPPING CAPTURED IMAGE
 
-![Alt text](https://i.ibb.co/vvjH2Wy/projet6.jpg)
+![Alt text](https://i.ibb.co/k6pnV6w/6.jpg)
 
 ### IMAGE PROFILE UPDATED
 
-![Alt text](https://i.ibb.co/bd58D0q/projet7.jpg)
+![Alt text](https://i.ibb.co/VMWXz50/7.jpg)
 
 
 # Author
